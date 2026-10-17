@@ -1,0 +1,533 @@
+"use client";
+
+import { Installment } from "@/lib/entities/installment";
+import { ServiceType } from "@/lib/entities/landingPage";
+import { Operator } from "@/lib/entities/operator";
+import { RoundLevelFa } from "@/lib/entities/round";
+import { SimPack, SimPackType } from "@/lib/entities/simPack";
+import {
+  getSimCardLevelIconUrl,
+  getSimCardLevelLabel,
+  getSimCardOperatorIconUrl,
+  getSimCardOperatorLabel,
+  getSimCardStateLabel,
+  getSimPackTypeLabel,
+} from "@/lib/helpers/decodeSimCardData";
+import { persianNumber } from "@/lib/helpers/persianNumber.helper";
+import { getElapsetTime, getRemainingTime } from "@/lib/helpers/timeDifference";
+import Image from "next/image";
+import ResponsiveLink from "../general/ResponsiveLink";
+import React, { ReactNode, useState } from "react";
+import Num2persian from "num2persian";
+import { SimKhast } from "@/lib/entities/simKhast";
+import { SingleSimCard } from "@/lib/entities/singleSimCard";
+
+type PackageCardProps = {
+  serviceType: ServiceType;
+  packageId?: string;
+  sellerSpell: string[];
+  operator?: Operator;
+  addvertiseTime?: EpochTimeStamp;
+  viewsCount?: number;
+  vip?: number;
+  cityFa: string;
+  provinceFa: string;
+  simCardState?: number;
+  simPackType?: SimPackType;
+  isApprovedByExpert?: boolean;
+  priceType?: number;
+  price?: number;
+  offPercent?: number;
+  offPrice?: number;
+  minPrice?: number | "X";
+  maxPrice?: number | "X";
+  roundLevelsFa?: RoundLevelFa[];
+  hasInstallment?: boolean;
+  installmentData?: Installment[];
+  isHighBid?: boolean;
+  highBidData?: {
+    expireDate: EpochTimeStamp;
+    _id: string;
+  };
+  simKhastData?: {
+    offerCount: number;
+    offerLimit: number;
+  };
+  blue?: boolean;
+  accordion?: boolean;
+  onDelete?: () => void;
+  selected?: boolean;
+  item?: SimKhast | SingleSimCard | SimPack;
+  onSelect?: (item: SimKhast | SingleSimCard | SimPack) => void;
+  isDashboardRoute?: boolean;
+};
+
+export default function PackageCard({
+  serviceType,
+  packageId,
+  sellerSpell = ["نامشخص"],
+  operator = "all",
+  addvertiseTime = 0,
+  viewsCount = 0,
+  vip = 0,
+  cityFa,
+  provinceFa,
+  simCardState = 10,
+  simPackType,
+  isApprovedByExpert,
+  roundLevelsFa,
+  priceType,
+  price = 0,
+  minPrice = 0,
+  maxPrice = 0,
+  offPercent = 0,
+  offPrice = 0,
+  hasInstallment = false,
+  isHighBid = false,
+  highBidData,
+  simKhastData,
+  blue = false,
+  accordion = false,
+  onDelete = () => {},
+  selected,
+  item,
+  onSelect,
+  isDashboardRoute = false,
+}: PackageCardProps) {
+  const [open, setOpen] = useState(false);
+  const handleToggleOpen = () => setOpen((prev) => !prev);
+  const handleClose = () => setOpen(false);
+
+  const isDeactivated = item?.isActive === false;
+  const isReserved = priceType === 4;
+  const isHighestBidExpired =
+    priceType === 2 &&
+    highBidData?.expireDate &&
+    Date.now() < highBidData.expireDate;
+  const isDeactivatedStyle = isDeactivated || isReserved || isHighestBidExpired;
+
+  let route = "";
+  let queryParams = "";
+  let targetId = packageId;
+
+  if (isDashboardRoute) {
+    switch (serviceType) {
+      case "specialSim":
+        route = "dashboard/my-sim-khasts";
+        break;
+      case "simPackHighBid":
+      case "simcardHighBid":
+        route = "dashboard/my-highest-bids";
+        queryParams = `highestBidType=${serviceType === "simPackHighBid" ? "simPack" : "simcard"}`;
+        break;
+      case "simPack":
+        route = "dashboard/my-sim-packs";
+        break;
+      case "simcard":
+        route = "dashboard/my-simcards";
+        break;
+    }
+  } else {
+    switch (serviceType) {
+      case "specialSim":
+        route = "sim-khast";
+        break;
+      case "simPackHighBid":
+      case "simcardHighBid":
+        route = "highest-bid";
+        targetId = highBidData?._id || "";
+        queryParams = `highestBidType=${serviceType === "simPackHighBid" ? "simPack" : "simcard"}`;
+        break;
+      case "simcard":
+        route = "single-sim-card";
+        break;
+      case "simPack":
+        if (priceType === 2) {
+          route = "highest-bid";
+          targetId = highBidData?._id || "";
+          queryParams = `highestBidType=${"simPack"}`;
+        } else {
+          route = "sim-pack";
+        }
+        break;
+      default:
+        route = "*-*";
+        break;
+    }
+  }
+
+  const badge1: ReactNode =
+    serviceType === "simPack" ? (
+      <PackageBadge label={`${Num2persian(sellerSpell.length)} سیم کارت`} />
+    ) : roundLevelsFa && roundLevelsFa.length ? (
+      <PackageBadge label="تعداد رندی" roundCount={roundLevelsFa.length} />
+    ) : (
+      <PackageBadge label="رند معمولی" />
+    );
+
+  const badge2: ReactNode =
+    serviceType === "specialSim" ? (
+      <PackageBadge label="سیم خواست" />
+    ) : priceType === 2 ? (
+      <PackageBadge label="بالاترین پیشنهاد" />
+    ) : priceType === 3 ? (
+      <PackageBadge label={`با ${persianNumber(offPercent)} درصد تخفیف`} />
+    ) : priceType === 4 ? (
+      <PackageBadge label="قابل رزرو" />
+    ) : hasInstallment ? (
+      <PackageBadge label="قسطی" />
+    ) : undefined;
+
+  const footer: ReactNode =
+    serviceType === "simPackHighBid" || serviceType === "simcardHighBid" ? (
+      <div className="itemx-center flex flex-row text-sm font-medium text-grey">
+        <p>امکان ثبت پیشنهاد تا&nbsp;</p>
+        <p className="text-blue">
+          {getRemainingTime(highBidData?.expireDate || 0)}
+        </p>
+      </div>
+    ) : serviceType === "specialSim" ? (
+      <div className="itemx-center flex flex-row text-sm font-medium text-grey">
+        <p>ثبت پیشنهاد&nbsp;</p>
+        <p className="text-blue">
+          {`${persianNumber((simKhastData?.offerLimit || 0) - (simKhastData?.offerCount || 0))} پیشنهاد باقی مانده`}
+        </p>
+      </div>
+    ) : priceType === 4 ? (
+      <div className="itemx-center flex flex-row text-sm font-medium text-grey">
+        <p>همین حالا رزرو کنید&nbsp;</p>
+      </div>
+    ) : (
+      <div className="itemx-center flex flex-row text-sm font-medium text-grey">
+        <p>اطلاعات تماس&nbsp;</p>
+      </div>
+    );
+
+  return (
+    <PackageCardWrapper
+      serviceType={serviceType}
+      numbersCount={sellerSpell.length}
+      accordion={accordion}
+      selected={selected}
+      item={item}
+      onSelect={onSelect}
+      open={open}
+      route={route}
+      targetId={targetId}
+      queryParams={queryParams}
+      blue={blue}
+    >
+      <div
+        className={`flex w-full flex-row items-center justify-between bg-grey-900 p-4 md:p-3 ${accordion ? "rounded-t-xl" : "rounded-xl"}`}
+      >
+        {accordion && (
+          <button
+            type="button"
+            className="flex h-4 w-4 min-w-4 items-center justify-center md:h-6 md:w-6 md:min-w-6"
+            onClick={onDelete}
+          >
+            <Image
+              src="/icons/icon-garbage.svg"
+              alt="Remove Item"
+              sizes="(max-width: 900px) 16px, 24px"
+              width={24}
+              height={24}
+              className="h-full w-full"
+            />
+          </button>
+        )}
+        <div className="flex w-full flex-col items-center justify-between gap-4">
+          <div
+            className={`flex flex-col items-center justify-center ${!accordion && (serviceType === "simPack" || serviceType === "simPackHighBid") ? "min-h-28 gap-3" : ""}`}
+          >
+            {sellerSpell
+              .slice(0, accordion ? sellerSpell.length : 3)
+              .map((spell, index) => (
+                <h3
+                  key={index}
+                  className={`ltr flex text-white ${accordion ? "text-base font-semibold leading-5 md:text-[26px] md:leading-7" : "text-lg font-medium leading-5 md:text-[26px] md:font-semibold md:leading-5"}`}
+                >
+                  {persianNumber(spell)}
+                </h3>
+              ))}
+          </div>
+          {!accordion && (
+            <div className="flex w-full flex-row items-center justify-around gap-3 whitespace-nowrap text-xs font-normal text-white">
+              {serviceType === "simcard" && (
+                <>
+                  <div className="flex w-1/2 flex-row items-center justify-center gap-[1px]">
+                    <Image
+                      src={getSimCardOperatorIconUrl(operator)}
+                      alt="Operator"
+                      width={16}
+                      height={16}
+                    />
+                    <p>{getSimCardOperatorLabel(operator)}</p>
+                  </div>
+                  <VerticalLineBlue />
+                </>
+              )}
+              <div className="flex w-1/2 flex-row items-center justify-center gap-[1px]">
+                <Image
+                  src="/icons/icon-calendar.svg"
+                  alt="Creation Time"
+                  width={16}
+                  height={16}
+                />
+                <p>{getElapsetTime(addvertiseTime)}</p>
+              </div>
+              <VerticalLineBlue />
+              <div className="flex w-1/2 flex-row items-center justify-center gap-[1px]">
+                <Image
+                  src="/icons/icon-eye.svg"
+                  alt="Visited Count"
+                  width={16}
+                  height={16}
+                />
+                <p>{persianNumber(viewsCount)}</p>
+              </div>
+              {!!vip && (
+                <>
+                  <VerticalLineBlue />
+                  <div className="flex w-1/2 flex-row items-center justify-center gap-[1px]">
+                    <Image
+                      src={getSimCardLevelIconUrl(vip)}
+                      alt="VIP"
+                      width={12}
+                      height={12}
+                    />
+                    <p>{getSimCardLevelLabel(vip)}</p>
+                  </div>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+        {accordion && (
+          <button
+            type="button"
+            className="flex h-4 w-4 min-w-4 items-center justify-center md:h-6 md:w-6 md:min-w-6"
+            onClick={handleToggleOpen}
+          >
+            <Image
+              src="/icons/icon-chevron-down-circled.svg"
+              alt="Open or Close Item"
+              sizes="(max-width: 900px) 16px, 24px"
+              width={24}
+              height={24}
+              className={`h-full w-full transition-transform ${open ? "rotate-180" : ""}`}
+            />
+          </button>
+        )}
+      </div>
+      {isDeactivatedStyle && (
+        <div className="flex h-8 w-full items-center justify-center rounded-md border-[0.5px] border-grey bg-grey-100 text-xs font-medium leading-5 text-grey">
+          {isDeactivated
+            ? "غیرفعال"
+            : isReserved
+              ? "رزرو شده"
+              : isHighestBidExpired
+                ? "پایان یافته"
+                : "نامشخص"}
+        </div>
+      )}
+      <div
+        className={`flex w-full flex-col items-center justify-between gap-3 rounded-md bg-grey-100 p-3 text-grey ${isDeactivatedStyle ? "opacity-50" : ""}`}
+      >
+        {serviceType === "specialSim" ? (
+          <>
+            <div className="flex w-full flex-row items-center justify-between gap-2">
+              <p className="text-sm font-normal">قیمت از:</p>
+              {minPrice === "X" ? (
+                <p className="text-base font-normal">مهم نیست</p>
+              ) : (
+                <div className="flex flex-row items-center gap-1">
+                  <p className="text-base font-medium">
+                    {persianNumber(minPrice)}
+                  </p>
+                  <p className="text-[10px] font-light">تومان</p>
+                </div>
+              )}
+            </div>
+            <div className="flex w-full flex-row items-center justify-between gap-2">
+              <p className="text-sm font-normal">قیمت تا:</p>
+              {maxPrice === "X" ? (
+                <p className="text-base font-normal">مهم نیست</p>
+              ) : (
+                <div className="flex flex-row items-center gap-1">
+                  <p className="text-base font-medium">
+                    {persianNumber(maxPrice)}
+                  </p>
+                  <p className="text-[10px] font-light">تومان</p>
+                </div>
+              )}
+            </div>
+            <div className="flex w-full flex-row items-center justify-between gap-2">
+              <p className="text-sm font-normal">استان:</p>
+              <p className="text-base font-normal">
+                {provinceFa || "فرقی ندارد"}
+              </p>
+            </div>
+            <div className="flex w-full flex-row items-center justify-between gap-2">
+              <p className="text-sm font-normal">اپراتور:</p>
+              <p className="text-base font-normal">
+                {getSimCardOperatorLabel(operator)}
+              </p>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="flex h-[24px] w-full flex-row items-center justify-between gap-4">
+              <p className="w-1/2 text-center">{cityFa}</p>
+              <VerticalLineGrey />
+              <div className="w-1/2 text-center">
+                {(serviceType === "simPack" ||
+                  serviceType === "simPackHighBid") &&
+                simPackType
+                  ? getSimPackTypeLabel(simPackType)
+                  : getSimCardStateLabel(simCardState)}
+              </div>
+            </div>
+            {
+              <div className="relative flex h-[32px] w-full flex-row items-center justify-center gap-1 rounded-md bg-white">
+                {!!offPrice || !!price ? (
+                  <>
+                    <p className="text-base font-bold">
+                      {offPrice
+                        ? persianNumber(offPrice)
+                        : persianNumber(price)}
+                    </p>
+                    <p className="text-[10px] font-light">تومان</p>
+                  </>
+                ) : (
+                  <p className="text-base font-bold">توافقی</p>
+                )}
+                {isApprovedByExpert && (
+                  <Image
+                    className="absolute left-2 h-5 w-5"
+                    src="/icons/icon-check-green.svg"
+                    alt="Approved By Expert"
+                    width={20}
+                    height={20}
+                  />
+                )}
+              </div>
+            }
+          </>
+        )}
+      </div>
+      <div
+        className={`flex h-[32px] w-full flex-row items-center justify-between gap-3 ${isDeactivatedStyle ? "opacity-50" : ""}`}
+      >
+        {badge1}
+        {badge2}
+      </div>
+      {!accordion && !isDeactivatedStyle && (
+        <div className="flex h-[32px] w-full flex-row items-center justify-end gap-2">
+          {footer}
+          <div className="flex h-[30px] w-[30px] items-center justify-center rounded-[4px] bg-blue-900">
+            <Image
+              src="/icons/icon-arrow-left.svg"
+              alt="Enter"
+              width={16}
+              height={16}
+            />
+          </div>
+        </div>
+      )}
+    </PackageCardWrapper>
+  );
+}
+
+function PackageCardWrapper({
+  serviceType,
+  numbersCount = 1,
+  accordion = false,
+  selected,
+  item,
+  onSelect,
+  open,
+  route,
+  targetId,
+  queryParams,
+  blue,
+  children,
+}: {
+  serviceType: ServiceType;
+  numbersCount?: number;
+  accordion?: boolean;
+  selected?: boolean;
+  item?: SimKhast | SingleSimCard | SimPack;
+  onSelect?: (item: SimKhast | SingleSimCard | SimPack) => void;
+  open?: boolean;
+  route?: string;
+  targetId?: string;
+  queryParams?: string;
+  blue?: boolean;
+  children: ReactNode;
+}) {
+  const openedHeight =
+    serviceType === "specialSim"
+      ? 260
+      : 200 +
+        (serviceType === "simPack" || serviceType === "simPackHighBid"
+          ? (numbersCount - 1) * 28
+          : 0);
+  const closedHeight =
+    52 +
+    (serviceType === "simPack" || serviceType === "simPackHighBid"
+      ? (numbersCount - 1) * 28
+      : 0);
+  return accordion ? (
+    <div
+      className={`flex w-[295px] flex-col items-center gap-3 overflow-y-clip transition-all md:w-[381px]`}
+      style={{
+        height: open ? openedHeight : closedHeight,
+        minHeight: open ? openedHeight : closedHeight,
+      }}
+    >
+      {children}
+    </div>
+  ) : selected !== undefined ? (
+    <button
+      onClick={() => onSelect && item && onSelect(item)}
+      className={`relative flex w-[302px] select-none flex-col items-center justify-between gap-2 rounded-xl border border-grey-200 ${blue ? "bg-neutral md:bg-white" : "bg-white"} ${selected ? "!border-grey" : "opacity-50"} px-4 py-5 hover:shadow-lg`}
+    >
+      {children}
+    </button>
+  ) : (
+    <ResponsiveLink
+      href={`/${route}/${targetId}?${queryParams}`}
+      className={`relative flex w-[302px] select-none flex-col items-center justify-between gap-2 rounded-xl border border-grey-200 ${blue ? "bg-neutral md:bg-white" : "bg-white"} px-4 py-5 hover:shadow-lg`}
+    >
+      {children}
+    </ResponsiveLink>
+  );
+}
+
+function PackageBadge({
+  label,
+  roundCount = 0,
+}: {
+  label: string;
+  roundCount?: number;
+}) {
+  return (
+    <div className="flex h-full w-full flex-row items-center justify-center gap-2 rounded-xl bg-biege text-xs font-medium text-brown">
+      <p>{label}</p>
+      {!!roundCount && (
+        <div className="flex h-5 w-5 items-center justify-center rounded-full border-[0.6px] border-brown pt-1 text-xs font-normal text-brown">
+          {persianNumber(roundCount)}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function VerticalLineBlue() {
+  return <div className="h-[16px] w-[1px] bg-blue" />;
+}
+
+function VerticalLineGrey() {
+  return <div className="h-6 w-[1px] bg-grey-200" />;
+}
