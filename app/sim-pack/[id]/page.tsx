@@ -21,7 +21,7 @@ export default async function SimPackPage({
       <Header />
 
       <main className="flex w-full max-w-7xl flex-col gap-12">
-        <div className="flex flex-row items-start justify-center gap-8">
+        <div className="flex flex-col items-center justify-center gap-8 md:flex-row md:items-start">
           <SimCardDetailCard
             title="سیم کارت گروهی"
             itemDetail={{
@@ -56,11 +56,13 @@ export default async function SimPackPage({
               },
             }}
           />
-          <AdvertiserCard
-            isStore={simPackData.isStore}
-            user={simPackData.user}
-            store={simPackData.store}
-          />
+          <div className="flex w-full flex-col items-center gap-10 px-6 md:px-0">
+            <AdvertiserCard
+              isStore={simPackData.isStore}
+              user={simPackData.user}
+              store={simPackData.store}
+            />
+          </div>
         </div>
         {!!simPackPageResponse.sameData.length && (
           <CardStack

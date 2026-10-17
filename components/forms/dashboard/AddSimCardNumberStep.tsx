@@ -220,8 +220,8 @@ export default function AddSimCardNumberStep({
           شماره مورد نظر خود را وارد کنید
         </p>
         <div className="flex w-full flex-col items-start gap-6">
-          <div className="flex w-full flex-row-reverse items-center justify-between">
-            <div className="h-[30px] w-[30px] md:h-12 md:w-12">
+          <div className="flex w-full flex-row-reverse items-center justify-between gap-1 sm:gap-2">
+            <div className="h-7 w-7 sm:h-[30px] sm:w-[30px] md:h-12 md:w-12">
               <CustomNumberTextField disabled value={persianNumber("09")} />
             </div>
             {Array.from({ length: 9 }, (_, i) => ({
@@ -234,7 +234,7 @@ export default function AddSimCardNumberStep({
                 name={name}
                 rules={{ required: true }}
                 render={({ field: { onChange, value } }) => (
-                  <div className="h-[30px] w-[30px] md:h-12 md:w-12">
+                  <div className="h-7 w-7 sm:h-[30px] sm:w-[30px] md:h-12 md:w-12">
                     <CustomNumberTextField
                       id={`${name}-input`}
                       value={persianNumber(value)}

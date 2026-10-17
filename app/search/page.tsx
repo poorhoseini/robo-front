@@ -312,7 +312,7 @@ export default async function SearchPage({
               simPackType={simPackType}
             />
           </div>
-          <div className="relative flex w-full flex-col items-end justify-start md:hidden">
+          <div className="relative flex w-full flex-col items-center justify-start md:hidden">
             <SortAndFilterSelector
               filtersCount={filters.length}
               sortBy={sortBy}

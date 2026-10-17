@@ -50,9 +50,9 @@ export default function CardStack({
   }
 
   return (
-    <section className="flex w-full flex-col items-center justify-between gap-4 pr-4 md:gap-8 md:pr-0">
+    <section className={`flex w-full flex-col items-center justify-between gap-4 px-4 md:gap-8 md:px-0`}>
       {!noTitle && (
-        <div className="flex w-full flex-row items-center justify-between gap-2 pl-4 md:pl-0">
+        <div className="flex w-full flex-row items-center justify-between gap-2">
           <div className="flex flex-row items-center gap-2">
             <Image
               src="/icons/icon-close-square.svg"
@@ -88,7 +88,7 @@ export default function CardStack({
 
       <div className={`w-full overflow-x-auto md:overflow-x-clip`}>
         <div
-          className={`flex ${direction === "horizontal" ? "w-[1264px]  flex-row" : "w-full flex-col"} flex-nowrap items-center justify-start md:w-full md:flex-wrap ${gapClasses}`}
+          className={`flex ${direction === "horizontal" ? "w-max min-w-full flex-row" : "w-full flex-col"} flex-nowrap items-center justify-start md:w-full md:flex-wrap ${gapClasses}`}
         >
           {stackData.cardType === "singleSim" ||
           stackData.cardType === "highBidSimcard" ||

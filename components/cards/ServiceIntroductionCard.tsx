@@ -3,7 +3,7 @@ import React from "react";
 
 export default function ServiceIntroductionCard() {
   return (
-    <div className="flex h-[350px] w-[410px] flex-col items-center justify-start gap-2 rounded-lg border border-grey-200 bg-white p-8">
+    <div className="flex h-[350px] w-[320px] max-w-[90vw] sm:w-[380px] md:w-[410px] flex-col items-center justify-start gap-2 rounded-lg border border-grey-200 bg-white p-4 sm:p-8">
       <h3 className="w-full text-right text-lg font-medium text-grey">
         معرفی کانال تلگرام
       </h3>

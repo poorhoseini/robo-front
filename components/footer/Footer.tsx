@@ -7,7 +7,7 @@ export default function Footer({
   selectedMenu?: string;
 }) {
   return (
-    <footer className="absolute bottom-0 flex w-full md:static">
+    <footer className="fixed bottom-0 left-0 right-0 z-40 flex w-full md:static">
       <div className="flex h-[68px] w-full items-center justify-center bg-grey px-4 py-2 text-[10px] font-normal text-biege md:hidden">
         <MobileFooter selectedMenu={selectedMenu} />
       </div>

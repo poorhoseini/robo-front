@@ -225,7 +225,7 @@ export default async function MySimCardsPage({
           <div className="sticky top-20 hidden w-[320px] md:flex">
             <DashboardMenu />
           </div>
-          <div className="relative flex w-full flex-col items-end justify-start md:hidden">
+          <div className="relative flex w-full flex-col items-center justify-start md:hidden">
             <SortAndFilterSelector
               filtersCount={filters.length}
               sortBy={sortBy}

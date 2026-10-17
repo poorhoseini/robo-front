@@ -54,7 +54,7 @@ export default function ServicesIntroductionSection() {
           </div>
         </div>
         <button
-          className="embla__next absolute -right-5 top-36 flex h-[40px] w-[40px] items-center justify-center rounded-full bg-grey-200"
+          className="embla__next absolute -right-5 top-36 hidden h-[40px] w-[40px] items-center justify-center rounded-full bg-grey-200 md:flex"
           onClick={scrollPrev}
         >
           <Image
@@ -65,7 +65,7 @@ export default function ServicesIntroductionSection() {
           />
         </button>
         <button
-          className="embla__next absolute -left-5 top-36 flex h-[40px] w-[40px] items-center justify-center rounded-full bg-grey-200"
+          className="embla__next absolute -left-5 top-36 hidden h-[40px] w-[40px] items-center justify-center rounded-full bg-grey-200 md:flex"
           onClick={scrollNext}
         >
           <Image

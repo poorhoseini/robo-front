@@ -18,7 +18,7 @@ export default function ShopCard({
   return (
     <ResponsiveLink
       href={`/search?shopId=${shopId}`}
-      className="flex h-[160px] w-[300px] flex-col items-center justify-between gap-2 rounded-xl border border-grey-200 bg-white px-4 py-5"
+      className="flex h-[160px] w-[300px] shrink-0 flex-col items-center justify-between gap-2 rounded-xl border border-grey-200 bg-white px-4 py-5"
     >
       <div className="flex w-full flex-row items-center justify-between">
         <div className="flex flex-row items-center gap-1">

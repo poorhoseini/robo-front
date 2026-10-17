@@ -173,7 +173,7 @@ export default function DashboardResultSection({
   }, [auth.token, scrollPosition, scrollLimit, skip]);
 
   return (
-    <div className="flex w-full flex-row items-start justify-start gap-4">
+    <div className="flex w-full flex-col items-center justify-start gap-4 pb-4 md:items-start">
       {!!clientSideResult && !!clientSideResult.length && (
         <CardStack
           noTitle={searchType !== "store"}

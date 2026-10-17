@@ -480,7 +480,7 @@ function PackageCardWrapper({
       : 0);
   return accordion ? (
     <div
-      className={`flex w-[295px] flex-col items-center gap-3 overflow-y-clip transition-all md:w-[381px]`}
+      className={`flex w-[295px] shrink-0 flex-col items-center gap-3 overflow-y-clip transition-all md:w-[381px]`}
       style={{
         height: open ? openedHeight : closedHeight,
         minHeight: open ? openedHeight : closedHeight,
@@ -491,14 +491,14 @@ function PackageCardWrapper({
   ) : selected !== undefined ? (
     <button
       onClick={() => onSelect && item && onSelect(item)}
-      className={`relative flex w-[302px] select-none flex-col items-center justify-between gap-2 rounded-xl border border-grey-200 ${blue ? "bg-neutral md:bg-white" : "bg-white"} ${selected ? "!border-grey" : "opacity-50"} px-4 py-5 hover:shadow-lg`}
+      className={`relative flex w-[302px] shrink-0 select-none flex-col items-center justify-between gap-2 rounded-xl border border-grey-200 ${blue ? "bg-neutral md:bg-white" : "bg-white"} ${selected ? "!border-grey" : "opacity-50"} px-4 py-5 hover:shadow-lg`}
     >
       {children}
     </button>
   ) : (
     <ResponsiveLink
       href={`/${route}/${targetId}?${queryParams}`}
-      className={`relative flex w-[302px] select-none flex-col items-center justify-between gap-2 rounded-xl border border-grey-200 ${blue ? "bg-neutral md:bg-white" : "bg-white"} px-4 py-5 hover:shadow-lg`}
+      className={`relative flex w-[302px] shrink-0 select-none flex-col items-center justify-between gap-2 rounded-xl border border-grey-200 ${blue ? "bg-neutral md:bg-white" : "bg-white"} px-4 py-5 hover:shadow-lg`}
     >
       {children}
     </ResponsiveLink>
