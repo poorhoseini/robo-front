@@ -19,15 +19,37 @@ import getProvinces from "@/lib/api/getProvinces";
 import { GetProvincesResponseProps } from "@/lib/entities/province";
 
 export default async function Home() {
-  const landingPageResponse: GetLandingPageResponseProps =
-    await GetLandingPage();
-  const landingPageData: GetLandingPageResponseProps["data"] =
-    landingPageResponse.data;
+  let landingPageData: GetLandingPageResponseProps["data"] = {
+    cardDatas: {},
+    pwaList: [],
+    webList: [],
+  };
+  let roundTypesList: any[] = [];
+  let provincesList: any[] = [];
 
-  const RoundTypesResponse: GetRoundTypesResponseProps = await getRoundTypes();
-  const roundTypesList = Object.values(RoundTypesResponse?.data || {});
-  const getProvincesResponse: GetProvincesResponseProps = await getProvinces();
-  const provincesList = getProvincesResponse.data.provinces;
+  try {
+    const [landingPageRes, roundTypesRes, provincesRes] =
+      await Promise.allSettled([
+        GetLandingPage(),
+        getRoundTypes(),
+        getProvinces(),
+      ]);
+
+    if (landingPageRes.status === "fulfilled" && landingPageRes.value?.data) {
+      landingPageData = landingPageRes.value.data;
+    }
+    if (roundTypesRes.status === "fulfilled" && roundTypesRes.value?.data) {
+      roundTypesList = Object.values(roundTypesRes.value.data || {});
+    }
+    if (
+      provincesRes.status === "fulfilled" &&
+      provincesRes.value?.data?.provinces
+    ) {
+      provincesList = provincesRes.value.data.provinces;
+    }
+  } catch (error) {
+    console.error("Error loading home page data:", error);
+  }
 
   function renderItemByCardType(
     item: LandingPageCard,
@@ -146,21 +168,25 @@ export default async function Home() {
 
       <main className="mb-[68px] w-full max-w-7xl overflow-y-auto md:mb-0 md:overflow-y-visible">
         <div className="hidden w-full md:flex md:flex-col md:gap-8">
-          {landingPageData.webList.map((item, index) =>
-            renderItemByCardType(
-              landingPageData.cardDatas[item],
-              index,
-              "desktop",
-            ),
+          {landingPageData?.webList?.map((item, index) =>
+            landingPageData?.cardDatas?.[item]
+              ? renderItemByCardType(
+                  landingPageData.cardDatas[item],
+                  index,
+                  "desktop",
+                )
+              : null,
           )}
         </div>
         <div className="flex w-full flex-col gap-8 md:hidden">
-          {landingPageData.pwaList.map((item, index) =>
-            renderItemByCardType(
-              landingPageData.cardDatas[item],
-              index,
-              "mobile",
-            ),
+          {landingPageData?.pwaList?.map((item, index) =>
+            landingPageData?.cardDatas?.[item]
+              ? renderItemByCardType(
+                  landingPageData.cardDatas[item],
+                  index,
+                  "mobile",
+                )
+              : null,
           )}
         </div>
       </main>
