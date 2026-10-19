@@ -4,6 +4,8 @@ import Header from "@/components/header/Header";
 import getProvinces from "@/lib/api/getProvinces";
 import { GetProvincesResponseProps } from "@/lib/entities/province";
 
+export const dynamic = "force-dynamic";
+
 export default async function AddSimPackPage() {
   const getProvincesResponse: GetProvincesResponseProps = await getProvinces();
   const provincesList = getProvincesResponse?.data?.provinces || [];

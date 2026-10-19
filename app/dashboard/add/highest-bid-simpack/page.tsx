@@ -5,6 +5,8 @@ import getProvinces from "@/lib/api/getProvinces";
 import { GetProvincesResponseProps } from "@/lib/entities/province";
 import React from "react";
 
+export const dynamic = "force-dynamic";
+
 export default async function AddHighestBidSimPackPage() {
   const getProvincesResponse: GetProvincesResponseProps = await getProvinces();
   const provincesList = getProvincesResponse?.data?.provinces || [];

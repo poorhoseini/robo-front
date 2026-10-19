@@ -1,20 +1,25 @@
 import { GetProvincesResponseProps } from "../entities/province";
 
 export default async function getProvinces(): Promise<GetProvincesResponseProps> {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/provinces/view/get`,
-    {
-      headers: {
-        "Content-Type": "application/json",
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/provinces/view/get`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "get",
+        cache: "no-store",
       },
-      method: "get",
-      cache: "force-cache",
-    },
-  );
+    );
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
+    if (!res.ok) {
+      return { status: res.status, data: { provinces: [] } } as any;
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.error("Failed to fetch provinces:", error);
+    return { status: 500, data: { provinces: [] } } as any;
   }
-
-  return res.json();
 }

@@ -1,21 +1,26 @@
 import { GetRoundTypesResponseProps } from "../entities/roundType";
 
 export default async function getRoundTypes(): Promise<GetRoundTypesResponseProps> {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/perdict/rondLevels/view/list`,
-    {
-      headers: {
-        "Content-Type": "application/json",
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/perdict/rondLevels/view/list`,
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ rondId: "all" }),
+        method: "post",
+        cache: "no-store",
       },
-      body: JSON.stringify({ rondId: "all" }),
-      method: "post",
-      cache: "force-cache",
-    },
-  );
+    );
 
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
+    if (!res.ok) {
+      return { status: res.status, data: {} } as any;
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.error("Failed to fetch round types:", error);
+    return { status: 500, data: {} } as any;
   }
-
-  return res.json();
 }

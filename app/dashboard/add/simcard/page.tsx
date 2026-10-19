@@ -6,6 +6,8 @@ import getRoundTypes from "@/lib/api/getRoundTypeList";
 import { GetProvincesResponseProps } from "@/lib/entities/province";
 import { GetRoundTypesResponseProps } from "@/lib/entities/roundType";
 
+export const dynamic = "force-dynamic";
+
 export default async function AddSimCardPage() {
   const getProvincesResponse: GetProvincesResponseProps = await getProvinces();
   const provincesList = getProvincesResponse?.data?.provinces || [];

@@ -7,6 +7,8 @@ import { GetProvincesResponseProps } from "@/lib/entities/province";
 import { GetRoundTypesResponseProps } from "@/lib/entities/roundType";
 import React from "react";
 
+export const dynamic = "force-dynamic";
+
 export default async function AddSimKhastPage() {
   const getProvincesResponse: GetProvincesResponseProps = await getProvinces();
   const provincesList = getProvincesResponse?.data?.provinces || [];
