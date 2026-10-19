@@ -1,5 +1,6 @@
 import DashboardResultSection from "@/components/dashboard/DashboardResultSection";
 import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
 import { LandingPageCard } from "@/lib/entities/landingPage";
 import { RequestFilter, RequestSort } from "@/lib/entities/api";
 
@@ -16,7 +17,7 @@ export default async function StoresPage() {
   return (
     <div className="relative flex h-full min-h-[100dvh] flex-col items-center bg-neutral md:gap-8">
       <Header />
-      <main className="flex w-full max-w-7xl flex-col gap-6">
+      <main className="flex w-full max-w-7xl flex-col gap-6 pb-24 md:pb-0">
         <div className="relative flex w-full flex-col items-center justify-start px-4 md:hidden">
           <DashboardResultSection
             serverResult={cardStackData}
@@ -37,6 +38,7 @@ export default async function StoresPage() {
           />
         </div>
       </main>
+      <Footer selectedMenu="services" />
     </div>
   );
 }

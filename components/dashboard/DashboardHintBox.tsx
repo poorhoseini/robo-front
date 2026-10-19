@@ -5,8 +5,7 @@ export default function DashboardHintBox() {
         معرفی سرویس‌ها
       </p>
       <p className="text-xl font-normal leading-7 text-grey">
-        توضیحات سرویس تخفیف برای این که سرویس های بیشتر بتونیم اراٍه بدیم و این
-        کادرو خوشگل بکنیم
+        کاربر گرامی در این قسمت می توانید سیم کارت های خود را ثبت و مدیریت نمایید.
       </p>
     </div>
   );

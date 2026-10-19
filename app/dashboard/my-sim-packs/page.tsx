@@ -2,6 +2,7 @@ import DashboardSearchActionBar from "@/components/dashboard/DashboardSearchActi
 import DashboardMenu from "@/components/dashboard/DashboardMenu";
 import DashboardResultSection from "@/components/dashboard/DashboardResultSection";
 import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
 import { LandingPageCard } from "@/lib/entities/landingPage";
 import {
   RequestFilter,
@@ -217,7 +218,7 @@ export default async function MySimPacksPage({
   return (
     <div className="relative flex h-full min-h-[100dvh] flex-col items-center bg-neutral md:gap-8">
       <Header selectedMenu="my-simpacks" />
-      <main className="flex w-full max-w-7xl flex-col gap-6">
+      <main className="flex w-full max-w-7xl flex-col gap-6 pb-24 md:pb-0">
         <div className="flex w-full px-4 md:hidden">
           <DashboardSimcardTabs searchType="simPack" />
         </div>
@@ -305,6 +306,7 @@ export default async function MySimPacksPage({
           </div>
         </div>
       </main>
+      <Footer selectedMenu="dashboard" />
     </div>
   );
 }

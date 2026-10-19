@@ -119,7 +119,7 @@ export default function AddExcelStepContent({
           />
         ) : fullScreen && step === 3 ? (
           <>
-            <div className="flex h-full w-full flex-col items-center gap-4 overflow-x-clip overflow-y-scroll rounded-lg bg-white p-4">
+            <div className="flex h-full w-full flex-col items-center gap-4 overflow-x-clip overflow-y-scroll rounded-lg bg-white p-4 pb-24 md:pb-4">
               {savedItems.map((savedItem, index) => (
                 <SavedItemCardClient
                   key={index}
@@ -147,7 +147,7 @@ export default function AddExcelStepContent({
                 />
               ))}
             </div>
-            <div className="absolute bottom-0 flex h-20 w-full flex-row items-center justify-center gap-4 border-t border-grey-100 bg-white p-4 md:hidden">
+            <div className="fixed bottom-0 left-0 right-0 z-30 flex h-20 w-full flex-row items-center justify-center gap-4 border-t border-grey-100 bg-white p-4 md:hidden">
               <PreAddSimCardSubmit service={service} isBlack />
             </div>
           </>

@@ -1,6 +1,7 @@
 import FiltersForm from "@/components/forms/search/FiltersForm";
 import SortSelector from "@/components/forms/search/SortSelector";
 import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
 import SearchResultSection from "@/components/forms/search/SearchResultSection";
 import getProvinces from "@/lib/api/getProvinces";
 import getRoundTypes from "@/lib/api/getRoundTypeList";
@@ -274,7 +275,7 @@ export default async function SearchPage({
         <h1>جستجو</h1>
       </header>
 
-      <main className="flex w-full max-w-7xl flex-col gap-6">
+      <main className="flex w-full max-w-7xl flex-col gap-6 pb-24 md:pb-0">
         {!!shopId && (
           <Suspense fallback={<SearchAdvertiserSkeleton />}>
             <AdvertiserSection shopId={shopId} />
@@ -362,6 +363,7 @@ export default async function SearchPage({
           </div>
         </div>
       </main>
+      <Footer selectedMenu="search" />
     </div>
   );
 }

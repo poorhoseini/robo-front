@@ -148,7 +148,7 @@ export default function AddSimPackPriceStep({
   return (
     <form
       onSubmit={handleSubmit(handleSubmitPrice)}
-      className="flex h-full w-full flex-col items-center justify-between gap-4"
+      className="flex h-full w-full flex-col items-center justify-between gap-4 pb-24 md:pb-0"
     >
       <div className="flex w-full flex-col items-start gap-4">
         <p className="text-base font-medium text-grey">نوع سیم پک</p>
@@ -345,7 +345,7 @@ export default function AddSimPackPriceStep({
           />
         </div>
       </div>
-      <div className="absolute bottom-0 flex h-20 w-full flex-row items-center justify-center gap-4 border-t border-grey-100 bg-white p-4 md:hidden">
+      <div className="fixed bottom-0 left-0 right-0 z-30 flex h-20 w-full flex-row items-center justify-center gap-4 border-t border-grey-100 bg-white p-4 md:hidden">
         <button
           type="submit"
           className="flex h-12 w-full items-center justify-center rounded-md bg-grey text-[17px] font-bold text-white"

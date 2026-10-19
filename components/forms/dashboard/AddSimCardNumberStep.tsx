@@ -17,10 +17,11 @@ import {
   useAddSimcardActions,
   useCitiesList,
 } from "@/lib/zustand/addSimCard";
-import { Autocomplete, MenuItem, TextField } from "@mui/material";
+import { MenuItem, TextField } from "@mui/material";
 import Image from "next/image";
 import { useMemo, useRef } from "react";
 import { Controller, useForm } from "react-hook-form";
+import SingleSelectFilterModal from "./SingleSelectFilterModal";
 
 type AddSimCardNumberFormProps = {
   digit1: string;
@@ -213,7 +214,7 @@ export default function AddSimCardNumberStep({
   return (
     <form
       onSubmit={handleSubmit(handleSubmitSimCardNumber)}
-      className="flex h-full w-full flex-col items-center justify-between"
+      className="flex h-full w-full flex-col items-center justify-between pb-24 md:pb-0"
     >
       <div className="flex w-full flex-col items-start gap-8">
         <p className="text-base font-medium text-grey">
@@ -306,111 +307,69 @@ export default function AddSimCardNumberStep({
               />
             </div>
           </div>
-          <div className="h-[56px] w-full md:w-[375px]">
+          <div className="w-full md:w-[375px]">
             <Controller
               control={control}
               name="province"
               rules={{ required: true }}
-              render={({ field: { onChange, value } }) => (
-                <Autocomplete
-                  disablePortal
-                  value={
-                    provinceSelectOptions.find(
-                      (item) => item.value === value,
-                    ) || provinceSelectOptions[0]
-                  }
-                  getOptionLabel={(option) => option.label}
-                  onChange={(e, option) => {
+              render={({ field: { onChange, value }, fieldState: { error } }) => (
+                <SingleSelectFilterModal
+                  label="انتخاب استان"
+                  dialogTitle="انتخاب استان"
+                  dialogSubtitle="استان مورد نظر خود را انتخاب کنید"
+                  listTitle="استان‌ها"
+                  searchId="province-search"
+                  options={provinceSelectOptions.filter((o) => !!o.value)}
+                  value={value}
+                  error={!!error}
+                  onChange={(option) => {
                     onChange(option?.value || "");
                     setProvince(
                       option?.value
                         ? provincesList.find(
-                            (province) =>
-                              province.id.toString() === option.value,
+                            (p) => p.id.toString() === option.value,
                           ) || null
                         : null,
                     );
                     setValue("city", "");
                   }}
-                  options={provinceSelectOptions}
-                  filterOptions={(options, state) =>
-                    options.filter(
-                      (option) =>
-                        !!option.value &&
-                        option.label.includes(state.inputValue),
-                    )
-                  }
-                  isOptionEqualToValue={(option, value) =>
-                    option.value === value?.value
-                  }
-                  sx={{
-                    width: "100%",
-                    height: "100%",
-                    borderRadius: "8px",
-                    "& .MuiInputBase-root": {
-                      height: "100%",
-                    },
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="انتخاب استان"
-                      error={!!errors.province}
-                    />
-                  )}
                 />
               )}
             />
           </div>
-          <div className="h-[56px] w-full md:w-[375px]">
+          <div className="w-full md:w-[375px]">
             <Controller
               control={control}
               name="city"
               rules={{ required: true }}
-              render={({ field: { onChange, onBlur, value, ref } }) => (
-                <Autocomplete
-                  disablePortal
-                  value={
-                    citySelectOptions.find((item) => item.value === value) ||
-                    citySelectOptions[0]
-                  }
-                  getOptionLabel={(option) => option.label}
-                  onChange={(e, option) => {
+              render={({ field: { onChange, value }, fieldState: { error } }) => (
+                <SingleSelectFilterModal
+                  label="انتخاب شهر"
+                  dialogTitle="انتخاب شهر"
+                  dialogSubtitle="شهر مورد نظر خود را انتخاب کنید"
+                  listTitle="شهرها"
+                  searchId="city-search"
+                  options={citySelectOptions.filter((o) => !!o.value)}
+                  value={value}
+                  error={!!error}
+                  disabled={citySelectOptions.filter((o) => !!o.value).length === 0}
+                  onChange={(option) => {
                     onChange(option?.value || "");
+                    setCity(
+                      option?.value
+                        ? citiesList.find(
+                            (c) => c.id.toString() === option.value,
+                          ) || null
+                        : null,
+                    );
                   }}
-                  options={citySelectOptions}
-                  filterOptions={(options, state) =>
-                    options.filter(
-                      (option) =>
-                        !!option.value &&
-                        option.label.includes(state.inputValue),
-                    )
-                  }
-                  isOptionEqualToValue={(option, value) =>
-                    option.value === value?.value
-                  }
-                  sx={{
-                    width: "100%",
-                    height: "100%",
-                    borderRadius: "8px",
-                    "& .MuiInputBase-root": {
-                      height: "100%",
-                    },
-                  }}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="انتخاب شهر"
-                      error={!!errors.city}
-                    />
-                  )}
                 />
               )}
             />
           </div>
         </div>
       </div>
-      <div className="absolute bottom-0 flex h-20 w-full flex-row items-center justify-center gap-4 border-t border-grey-100 bg-white p-4 md:hidden">
+      <div className="fixed bottom-0 left-0 right-0 z-30 flex h-20 w-full flex-row items-center justify-center gap-4 border-t border-grey-100 bg-white p-4 md:hidden">
         <button
           type="submit"
           className="flex h-12 w-full items-center justify-center rounded-md bg-grey text-[17px] font-bold text-white"
@@ -418,7 +377,7 @@ export default function AddSimCardNumberStep({
           ادامه
         </button>
       </div>
-      <div className="hidden w-full flex-row items-center justify-center gap-4 md:flex">
+      <div className="mt-8 hidden w-full flex-row items-center justify-center gap-4 md:flex">
         <button
           type="submit"
           className="flex h-14 w-full items-center justify-center rounded-md bg-grey text-[17px] font-bold text-white"

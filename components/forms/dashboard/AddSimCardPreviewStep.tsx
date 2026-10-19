@@ -64,7 +64,7 @@ export default function AddSimCardPreviewStep({
   };
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-between">
+    <div className="flex h-full w-full flex-col items-center justify-between pb-24 md:pb-0">
       <div className="flex w-full flex-col items-center gap-4 rounded-lg bg-white p-4 md:p-0">
         <div className="flex w-full items-center justify-center rounded-xl bg-primary p-4">
           <p className="text-3xl font-medium text-white">
@@ -172,7 +172,7 @@ export default function AddSimCardPreviewStep({
             </div>
           )}
       </div>
-      <div className="absolute bottom-0 flex h-20 w-full flex-row items-center justify-center gap-4 border-t border-grey-100 bg-white p-4 md:hidden">
+      <div className="fixed bottom-0 left-0 right-0 z-30 flex h-20 w-full flex-row items-center justify-center gap-4 border-t border-grey-100 bg-white p-4 md:hidden">
         <button
           onClick={handleSubmitSimCard}
           className="flex h-12 w-full items-center justify-center rounded-md bg-grey text-[17px] font-bold text-white"

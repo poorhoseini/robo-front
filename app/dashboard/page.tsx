@@ -3,6 +3,7 @@
 import WalletChargeDialog from "@/components/cart/WalletChargeDialog";
 import Space from "@/components/general/Space";
 import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
 import { ResponseError } from "@/lib/api/error";
 import getMyWalletBalance from "@/lib/api/getMyWalletBalance";
 import { dashboardMenuItems } from "@/lib/constants/menuItems";
@@ -62,7 +63,7 @@ export default function DashboardPage() {
   return (
     <div className="relative flex h-full min-h-[100dvh] flex-col items-center bg-neutral">
       <Header selectedMenu="dashboard" />
-      <main className="flex w-full flex-col p-6">
+      <main className="flex w-full flex-col p-6 pb-24 md:pb-6">
         <div className="flex w-full flex-col items-center rounded-lg border border-grey-200 bg-white p-4">
           <div className="flex w-full flex-row items-start gap-2">
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-biege-200">
@@ -160,6 +161,7 @@ export default function DashboardPage() {
           ))}
         </div>
       </main>
+      <Footer selectedMenu="dashboard" />
     </div>
   );
 }
