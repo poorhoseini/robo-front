@@ -124,7 +124,7 @@ export default function MobileHeader({
       ) : (
         <UserButton />
       )}
-      <h1 className="text-sm font-medium text-grey">
+      <h1 className="text-base font-bold text-grey">
         {selectedMenu === "addSimcard"
           ? "ثبت آگهی سیم کارت"
           : selectedMenu === "addHighestBidSimcard"

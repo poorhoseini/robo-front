@@ -60,6 +60,7 @@ type PackageCardProps = {
   item?: SimKhast | SingleSimCard | SimPack;
   onSelect?: (item: SimKhast | SingleSimCard | SimPack) => void;
   isDashboardRoute?: boolean;
+  isVertical?: boolean;
 };
 
 export default function PackageCard({
@@ -93,6 +94,7 @@ export default function PackageCard({
   item,
   onSelect,
   isDashboardRoute = false,
+  isVertical = false,
 }: PackageCardProps) {
   const [open, setOpen] = useState(false);
   const handleToggleOpen = () => setOpen((prev) => !prev);
@@ -216,6 +218,7 @@ export default function PackageCard({
       targetId={targetId}
       queryParams={queryParams}
       blue={blue}
+      isVertical={isVertical}
     >
       <div
         className={`flex w-full flex-row items-center justify-between bg-grey-900 p-4 md:p-3 ${accordion ? "rounded-t-xl" : "rounded-xl"}`}
@@ -451,6 +454,7 @@ function PackageCardWrapper({
   targetId,
   queryParams,
   blue,
+  isVertical = false,
   children,
 }: {
   serviceType: ServiceType;
@@ -464,6 +468,7 @@ function PackageCardWrapper({
   targetId?: string;
   queryParams?: string;
   blue?: boolean;
+  isVertical?: boolean;
   children: ReactNode;
 }) {
   const openedHeight =
@@ -480,7 +485,7 @@ function PackageCardWrapper({
       : 0);
   return accordion ? (
     <div
-      className={`flex w-[295px] shrink-0 flex-col items-center gap-3 overflow-y-clip transition-all md:w-[381px]`}
+      className={`flex ${isVertical ? "w-full" : "w-[295px] md:w-[381px]"} shrink-0 flex-col items-center gap-3 overflow-y-clip transition-all`}
       style={{
         height: open ? openedHeight : closedHeight,
         minHeight: open ? openedHeight : closedHeight,
@@ -491,14 +496,14 @@ function PackageCardWrapper({
   ) : selected !== undefined ? (
     <button
       onClick={() => onSelect && item && onSelect(item)}
-      className={`relative flex w-[302px] shrink-0 select-none flex-col items-center justify-between gap-2 rounded-xl border border-grey-200 ${blue ? "bg-neutral md:bg-white" : "bg-white"} ${selected ? "!border-grey" : "opacity-50"} px-4 py-5 hover:shadow-lg`}
+      className={`relative flex ${isVertical ? "w-full" : "w-[302px]"} shrink-0 select-none flex-col items-center justify-between gap-2 rounded-xl border border-grey-200 ${blue ? "bg-neutral md:bg-white" : "bg-white"} ${selected ? "!border-grey" : "opacity-50"} px-4 py-5 hover:shadow-lg`}
     >
       {children}
     </button>
   ) : (
     <ResponsiveLink
       href={`/${route}/${targetId}?${queryParams}`}
-      className={`relative flex w-[302px] shrink-0 select-none flex-col items-center justify-between gap-2 rounded-xl border border-grey-200 ${blue ? "bg-neutral md:bg-white" : "bg-white"} px-4 py-5 hover:shadow-lg`}
+      className={`relative flex ${isVertical ? "w-full" : "w-[302px]"} shrink-0 select-none flex-col items-center justify-between gap-2 rounded-xl border border-grey-200 ${blue ? "bg-neutral md:bg-white" : "bg-white"} px-4 py-5 hover:shadow-lg`}
     >
       {children}
     </ResponsiveLink>
