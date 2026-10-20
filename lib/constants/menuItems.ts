@@ -1,5 +1,12 @@
 export const dashboardMenuItems = [
   {
+    id: 0,
+    label: "پیشخوان",
+    href: "/dashboard",
+    imageSrc: "/icons/icon-squares.svg",
+    activeImageSrc: "/icons/icons-squares-active.svg",
+  },
+  {
     id: 1,
     label: "سیم کارت‌های من",
     href: "/dashboard/my-simcards",

@@ -20,18 +20,22 @@ export default function DashboardMenu() {
         <Space value={16} />
         <HorizontalLine />
         <Space value={16} />
-        {dashboardMenuItems.slice(0, 5).map((item) => (
+        {dashboardMenuItems.slice(0, 6).map((item) => (
           <Link
             key={item.id}
             href={item.href}
-            className={`flex h-14 w-[230px] flex-row items-center justify-start gap-2 rounded-lg px-12 py-4 ${selectedMenu?.id === item.id ? "bg-grey text-white" : "text-grey hover:bg-grey-100"}`}
+            className={`flex h-14 w-[230px] flex-row items-center justify-start gap-3 rounded-lg px-6 py-4 transition-colors ${selectedMenu?.id === item.id ? "bg-grey text-white" : "text-grey hover:bg-grey-100"}`}
           >
-            <div className="relative h-8 w-8 min-w-8">
+            <div className="relative h-6 w-6 min-w-6">
               <Image
-                src={item.imageSrc}
+                src={
+                  selectedMenu?.id === item.id && item.activeImageSrc
+                    ? item.activeImageSrc
+                    : item.imageSrc
+                }
                 alt=""
                 fill
-                sizes="32px"
+                sizes="24px"
                 className="object-contain"
               />
             </div>
@@ -43,18 +47,22 @@ export default function DashboardMenu() {
         <Space value={16} />
         <HorizontalLine />
         <Space value={16} />
-        {dashboardMenuItems.slice(5).map((item) => (
+        {dashboardMenuItems.slice(6).map((item) => (
           <Link
             key={item.id}
             href={item.href}
-            className={`flex h-14 w-[230px] flex-row items-center justify-start gap-2 rounded-lg px-12 py-4 ${selectedMenu?.id === item.id ? "bg-grey text-white" : "text-grey hover:bg-grey-100"}`}
+            className={`flex h-14 w-[230px] flex-row items-center justify-start gap-3 rounded-lg px-6 py-4 transition-colors ${selectedMenu?.id === item.id ? "bg-grey text-white" : "text-grey hover:bg-grey-100"}`}
           >
-            <div className="relative h-8 w-8 min-w-8">
+            <div className="relative h-6 w-6 min-w-6">
               <Image
-                src={item.imageSrc}
+                src={
+                  selectedMenu?.id === item.id && item.activeImageSrc
+                    ? item.activeImageSrc
+                    : item.imageSrc
+                }
                 alt=""
                 fill
-                sizes="32px"
+                sizes="24px"
                 className="object-contain"
               />
             </div>

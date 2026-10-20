@@ -148,14 +148,14 @@ export default function AccountMenu({ auth }: { auth: Auth }) {
         <MenuItem
           sx={{ padding: "16px" }}
           onClick={() => {
-            router.push("/dashboard/my-simcards");
+            router.push("/dashboard");
             handleClose();
           }}
         >
           <div className="flex w-full flex-row items-center justify-start gap-2">
             <Image
-              src="/icons/icon-user.svg"
-              alt="Login"
+              src="/icons/icon-squares.svg"
+              alt="Dashboard"
               width={24}
               height={24}
             />
