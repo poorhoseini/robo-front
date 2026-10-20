@@ -21,7 +21,7 @@ export const initialAuth: Auth = {
 export const AuthContext = createContext({
   auth: initialAuth,
   setAuth: (auth: Auth) => {},
-  setAuthAndRedirect: (auth: Auth) => {},
+  setAuthAndRedirect: (auth: Auth, redirect?: string) => {},
   resetAuth: () => {},
 });
 
@@ -44,7 +44,7 @@ export default function AuthProvider({
     (auth: Auth, redirect?: string) => {
       setAuth(auth);
       setAuthIntoStorage(auth);
-      redirect && router.push(redirect);
+      router.push(redirect || "/dashboard");
     },
     [router],
   );
@@ -53,7 +53,7 @@ export default function AuthProvider({
     setAuth(initialAuth);
     removeAuthFromStorage();
     // router.replace("/");
-  }, [router]);
+  }, []);
 
   return (
     <AuthContext.Provider

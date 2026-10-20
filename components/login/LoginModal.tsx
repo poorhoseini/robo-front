@@ -120,7 +120,7 @@ export default function LoginModal() {
 
     try {
       const response: CheckOtpResponseProps = await checkOtp(payload);
-      setAuthAndRedirect(response.data); // redirection logic here. may be from query params
+      setAuthAndRedirect(response.data, "/dashboard");
       handleClose();
     } catch (error) {
       if (error instanceof ResponseError) {
