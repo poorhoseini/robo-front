@@ -93,15 +93,17 @@ export default async function Home() {
           <ResponsiveLink
             key={key}
             href={item.path || ""}
-            className="flex h-[100px] w-[100px] flex-col items-center justify-start gap-5 rounded-lg border border-grey-100 bg-white p-3"
+            className="flex h-[93px] flex-1 flex-col items-center justify-center gap-2 rounded-2xl border border-grey-200 bg-white p-2.5 shadow-sm transition-all hover:shadow-md md:h-[100px] md:w-[120px]"
           >
-            <Image
-              src="/icons/icon-plus-black.svg"
-              alt="Plus"
-              width={24}
-              height={24}
-            />
-            <p className="text-center text-xs font-medium text-grey">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-grey text-white">
+              <Image
+                src="/icons/icon-plus-white.svg"
+                alt="Plus"
+                width={14}
+                height={14}
+              />
+            </div>
+            <p className="text-center text-xs font-medium text-grey leading-4">
               {item.title}
             </p>
           </ResponsiveLink>
@@ -128,8 +130,8 @@ export default async function Home() {
         return (
           <div
             key={key}
-            className={`flex w-full flex-col items-center justify-between gap-6 rounded-xl border border-grey-200 px-4 py-7`}
-            style={{ backgroundColor: item.bgColor }}
+            className={`flex w-full flex-col items-center justify-between gap-4 rounded-3xl border border-grey-200 bg-white p-4 shadow-sm md:rounded-xl md:gap-6 md:px-4 md:py-7`}
+            style={{ backgroundColor: item.bgColor || "#FFFFFF" }}
           >
             {item?.data?.map((subItem, index) =>
               renderItemByCardType(
@@ -145,7 +147,7 @@ export default async function Home() {
         return (
           <section
             key={key}
-            className="flex w-full flex-row items-center justify-center gap-4 px-4"
+            className="grid w-full grid-cols-3 gap-3 px-4 md:flex md:w-full md:flex-row md:items-center md:justify-center md:gap-4"
           >
             {item.data?.map((subItem, index) =>
               renderItemByCardType(
@@ -178,7 +180,7 @@ export default async function Home() {
               : null,
           )}
         </div>
-        <div className="flex w-full flex-col gap-8 md:hidden">
+        <div className="flex w-full flex-col gap-8 pb-8 md:hidden">
           {landingPageData?.pwaList?.map((item, index) =>
             landingPageData?.cardDatas?.[item]
               ? renderItemByCardType(

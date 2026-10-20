@@ -20,6 +20,7 @@ type CardStackProps = {
   selectedData?: LandingPageCard["data"];
   onSelect?: (item: SimKhast | SingleSimCard | SimPack) => void;
   isDashboardRoute?: boolean;
+  isSubItem?: boolean;
 };
 
 export default function CardStack({
@@ -33,6 +34,7 @@ export default function CardStack({
   selectedData,
   onSelect,
   isDashboardRoute = false,
+  isSubItem = false,
 }: CardStackProps) {
   const packages: LandingPageCard["data"] = stackData.data;
   let gapClasses;
@@ -50,35 +52,36 @@ export default function CardStack({
   }
 
   return (
-    <section className={`flex w-full flex-col items-center justify-between gap-4 px-4 md:gap-8 md:px-0`}>
+    <section className={`flex w-full flex-col items-center justify-between gap-4 ${isSubItem ? "px-0" : "px-4"} md:gap-8 md:px-0`}>
       {!noTitle && (
         <div className="flex w-full flex-row items-center justify-between gap-2">
           <div className="flex flex-row items-center gap-2">
             <Image
               src="/icons/icon-close-square.svg"
               alt={stackData.title}
-              width={32}
-              height={32}
+              width={24}
+              height={24}
+              className="h-6 w-6 md:h-8 md:w-8"
             />
-            <h2 className="text-sm font-medium text-grey md:text-2xl">
+            <h2 className="text-sm font-bold text-grey md:text-2xl">
               {stackData.title}
             </h2>
           </div>
           {!noMoreButton && (
             <ResponsiveLink
               href={link}
-              className="flex flex-row items-center justify-end gap-2"
+              className="flex flex-row items-center justify-end gap-1.5"
             >
-              <div className="itemx-center flex flex-row text-xl font-medium text-grey">
+              <div className="flex flex-row items-center text-sm font-medium text-grey md:text-xl">
                 <p className="hidden md:block">مشاهده بیشتر</p>
-                <p className="block text-sm font-normal md:hidden">بیشتر</p>
+                <p className="block text-xs font-normal text-grey md:hidden">بیشتر</p>
               </div>
-              <div className="flex h-[28px] w-[28px] items-center justify-center rounded-[4px] bg-blue-900">
+              <div className="flex h-5 w-5 items-center justify-center rounded-[4px] bg-blue-900 md:h-[28px] md:w-[28px]">
                 <Image
                   src="/icons/icon-arrow-left.svg"
                   alt="See More"
-                  width={16}
-                  height={16}
+                  width={14}
+                  height={14}
                 />
               </div>
             </ResponsiveLink>
@@ -128,6 +131,7 @@ export default function CardStack({
                 item={item}
                 onSelect={onSelect}
                 isDashboardRoute={isDashboardRoute}
+                isVertical={direction === "vertical"}
               />
             ))
           ) : stackData.cardType === "simPack" ||
@@ -161,6 +165,7 @@ export default function CardStack({
                 item={item}
                 onSelect={onSelect}
                 isDashboardRoute={isDashboardRoute}
+                isVertical={direction === "vertical"}
               />
             ))
           ) : stackData.cardType === "simKhast" ? (
@@ -194,6 +199,7 @@ export default function CardStack({
                 item={item}
                 onSelect={onSelect}
                 isDashboardRoute={isDashboardRoute}
+                isVertical={direction === "vertical"}
               />
             ))
           ) : stackData.cardType === "store" ? (
