@@ -8,6 +8,9 @@ import { SimKhast } from "@/lib/entities/simKhast";
 import ShopCard from "../cards/ShopCard";
 import { StoreAdvertiser } from "@/lib/entities/advertiser";
 import ResponsiveLink from "../general/ResponsiveLink";
+import PackageSkeleton, {
+  StoreCardSkeleton,
+} from "../skeletons/PackageSkeleton";
 
 type CardStackProps = {
   stackData: LandingPageCard;
@@ -37,6 +40,7 @@ export default function CardStack({
   isSubItem = false,
 }: CardStackProps) {
   const packages: LandingPageCard["data"] = stackData.data;
+  const hasItems = !!(packages && packages.length);
   let gapClasses;
 
   switch (gap) {
@@ -93,10 +97,24 @@ export default function CardStack({
         <div
           className={`flex ${direction === "horizontal" ? "w-max min-w-full flex-row" : "w-full flex-col"} flex-nowrap items-center justify-start md:w-full md:flex-wrap ${gapClasses}`}
         >
-          {stackData.cardType === "singleSim" ||
-          stackData.cardType === "highBidSimcard" ||
-          stackData.cardType === "offPrice" ||
-          stackData.cardType === "singleSim-table" ? (
+          {!hasItems ? (
+            direction === "vertical" ? (
+              [1, 2, 3].map((n) => (
+                <PackageSkeleton key={n} isVertical={true} />
+              ))
+            ) : stackData.cardType === "store" ? (
+              [1, 2, 3].map((n) => (
+                <StoreCardSkeleton key={n} />
+              ))
+            ) : (
+              [1, 2, 3].map((n) => (
+                <PackageSkeleton key={n} />
+              ))
+            )
+          ) : stackData.cardType === "singleSim" ||
+            stackData.cardType === "highBidSimcard" ||
+            stackData.cardType === "offPrice" ||
+            stackData.cardType === "singleSim-table" ? (
             (packages as SingleSimCard[])?.map((item) => (
               <PackageCard
                 key={item._id}
@@ -115,7 +133,7 @@ export default function CardStack({
                 price={item.price}
                 offPercent={item.offPercent}
                 offPrice={item.offPrice}
-                roundLevelsFa={item.rondData.rondLevelsFa}
+                roundLevelsFa={item.rondData?.rondLevelsFa}
                 hasInstallment={item.isInstallment}
                 installmentData={item.installmentPlan}
                 isHighBid={item.isHighBid}

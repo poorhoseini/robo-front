@@ -15,13 +15,8 @@ import ResponsiveLink from "@/components/general/ResponsiveLink";
 import PriceAndRoundAnalysisDialog from "@/components/cards/PriceAndRoundAnalysisDialog";
 import getRoundTypes from "@/lib/api/getRoundTypeList";
 import getProvinces from "@/lib/api/getProvinces";
-import {
-  figmaSpecialOffers,
-  figmaStores,
-  figmaDiscounts,
-  figmaLatestSimcards,
-  figmaMiddleActionButtons,
-} from "@/lib/constants/figmaMockData";
+import searchSingleSimCards from "@/lib/api/searchSingleSimCards";
+import { SingleSimCard } from "@/lib/entities/singleSimCard";
 
 export default async function Home() {
   let landingPageData: GetLandingPageResponseProps["data"] = {
@@ -31,13 +26,19 @@ export default async function Home() {
   };
   let roundTypesList: any[] = [];
   let provincesList: any[] = [];
+  let latestSimCards: SingleSimCard[] = [];
 
   try {
-    const [landingPageRes, roundTypesRes, provincesRes] =
+    const [landingPageRes, roundTypesRes, provincesRes, latestSimsRes] =
       await Promise.allSettled([
         GetLandingPage(),
         getRoundTypes(),
         getProvinces(),
+        searchSingleSimCards(
+          8,
+          [{ field: "isHighBid", oprand: "=", value: false }],
+          { field: "_id", order: -1 },
+        ),
       ]);
 
     if (landingPageRes.status === "fulfilled" && landingPageRes.value?.data) {
@@ -51,6 +52,9 @@ export default async function Home() {
       provincesRes.value?.data?.provinces
     ) {
       provincesList = provincesRes.value.data.provinces;
+    }
+    if (latestSimsRes.status === "fulfilled" && latestSimsRes.value?.data) {
+      latestSimCards = latestSimsRes.value.data;
     }
   } catch (error) {
     console.error("Error loading home page data:", error);
@@ -71,15 +75,12 @@ export default async function Home() {
       case "simPack":
       case "highBidSimPack":
         return (
-          !!item.data &&
-          !!item.data.length && (
-            <CardStack
-              key={key}
-              stackData={item}
-              gap={isSubItem ? 3 : 6}
-              link={item.path}
-            />
-          )
+          <CardStack
+            key={key}
+            stackData={item}
+            gap={isSubItem ? 3 : 6}
+            link={item.path}
+          />
         );
       case "singleSim-table":
         return width === "desktop" ? (
@@ -87,9 +88,12 @@ export default async function Home() {
         ) : (
           <CardStack
             key={key}
-            stackData={item}
+            stackData={{
+              ...item,
+              data: item.data?.length ? item.data : latestSimCards,
+            }}
             gap={isSubItem ? 3 : 4}
-            link={item.path}
+            link={item.path || "/search?searchType=simcard"}
             direction="vertical"
           />
         );
@@ -169,25 +173,21 @@ export default async function Home() {
     }
   }
 
-  // Build mobile sections according to Figma design layout
+  // Build mobile sections according to Figma design layout (using real backend data, skeletons when empty)
   const mobileSpecialOffer: LandingPageCard = {
     cardType: "singleSim",
     title: landingPageData?.cardDatas?.["specialOffer"]?.title || "پیشنهاد ویژه",
     path:
       landingPageData?.cardDatas?.["specialOffer"]?.path ||
       "/search?searchType=simcard",
-    data: landingPageData?.cardDatas?.["specialOffer"]?.data?.length
-      ? landingPageData.cardDatas["specialOffer"].data
-      : figmaSpecialOffers,
+    data: landingPageData?.cardDatas?.["specialOffer"]?.data || [],
   };
 
   const mobileBestStore: LandingPageCard = {
     cardType: "store",
     title: landingPageData?.cardDatas?.["bestStore"]?.title || "فروشگاه ها",
     path: landingPageData?.cardDatas?.["bestStore"]?.path || "/search",
-    data: landingPageData?.cardDatas?.["bestStore"]?.data?.length
-      ? landingPageData.cardDatas["bestStore"].data
-      : figmaStores,
+    data: landingPageData?.cardDatas?.["bestStore"]?.data || [],
   };
 
   const mobileDiscount: LandingPageCard = {
@@ -196,15 +196,32 @@ export default async function Home() {
     path:
       landingPageData?.cardDatas?.["discount"]?.path ||
       "/search?searchType=simcard",
-    data: landingPageData?.cardDatas?.["discount"]?.data?.length
-      ? landingPageData.cardDatas["discount"].data
-      : figmaDiscounts,
+    data: landingPageData?.cardDatas?.["discount"]?.data || [],
   };
 
-  const mobileRowButtons: LandingPageCard =
-    landingPageData?.cardDatas?.["rowButton-pwa"]?.data?.length
-      ? landingPageData.cardDatas["rowButton-pwa"]
-      : figmaMiddleActionButtons;
+  const mobileRowButtons: LandingPageCard = landingPageData?.cardDatas?.[
+    "rowButton-pwa"
+  ] || {
+    cardType: "rowButton",
+    title: "",
+    data: [
+      {
+        cardType: "button",
+        title: "سیم کارت‌های گروهی",
+        path: "/search?searchType=simPack",
+      },
+      {
+        cardType: "button",
+        title: "سیم خواست",
+        path: "/sim-khast",
+      },
+      {
+        cardType: "button",
+        title: "بالاترین پیشنهاد",
+        path: "/highest-bid",
+      },
+    ],
+  };
 
   const pwaGroupCard = landingPageData?.cardDatas?.["pwaGroup"]?.data?.[0] as
     | LandingPageCard
@@ -212,11 +229,9 @@ export default async function Home() {
 
   const mobileLatestSims: LandingPageCard = {
     cardType: "singleSim-table",
-    title: "آخرین سیم‌کارت‌ها:",
-    path: "/search?searchType=simcard",
-    data: pwaGroupCard?.data?.length
-      ? pwaGroupCard.data
-      : figmaLatestSimcards,
+    title: pwaGroupCard?.title || "آخرین سیم‌کارت‌ها:",
+    path: pwaGroupCard?.path || "/search?searchType=simcard",
+    data: pwaGroupCard?.data?.length ? pwaGroupCard.data : latestSimCards,
   };
 
   return (
@@ -237,7 +252,7 @@ export default async function Home() {
           )}
         </div>
 
-        {/* Mobile View - Matches Figma Design Structure */}
+        {/* Mobile View - Matches Figma Layout with Real Backend Data & Skeletons */}
         <div className="flex w-full flex-col gap-6 pb-24 md:hidden">
           {renderItemByCardType(mobileSpecialOffer, 0, "mobile")}
           {renderItemByCardType(mobileBestStore, 1, "mobile")}
