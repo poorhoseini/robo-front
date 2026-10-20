@@ -62,7 +62,7 @@ export default function TermsModal() {
         >
           <DialogTitle sx={{ p: 0 }} component="h1">
             <span className="text-xl font-medium leading-6 text-grey">
-              شرایط و قوانین روبوروند
+              شرایط و قوانین روبورند
             </span>
           </DialogTitle>
           <IconButton onClick={handleClose}>

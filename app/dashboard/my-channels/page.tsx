@@ -31,7 +31,7 @@ function HintBoxSection() {
   return (
     <div className="relative flex w-full flex-col items-start rounded-lg bg-grey-100 px-6 py-10">
       <p className="text-xl font-medium leading-8 text-grey">
-        ربات روبوروند مدیریت کانال شما را بر عهده می‌گیرد و پیام‌های شما را به
+        ربات روبورند مدیریت کانال شما را بر عهده می‌گیرد و پیام‌های شما را به
         صورت هشتگ گذاری شده در کانال شما ارسال می‌کند.
       </p>
       <Space value={24} />

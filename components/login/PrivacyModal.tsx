@@ -62,7 +62,7 @@ export default function PrivacyModal() {
         >
           <DialogTitle sx={{ p: 0 }} component="h1">
             <span className="text-xl font-medium leading-6 text-grey">
-              قوانین حفظ حریم شخصی روبوروند
+              قوانین حفظ حریم شخصی روبورند
             </span>
           </DialogTitle>
           <IconButton onClick={handleClose}>

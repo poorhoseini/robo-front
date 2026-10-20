@@ -152,9 +152,9 @@ export default function PredictByExpertDetailsDialog({
             <Space value={24} />
             <div className="w-full rounded-md bg-grey-200 p-6">
               <p className="text-lg font-medium leading-7 text-grey">
-                روبووند مایل است این سیم کارت را با قیمت کارشناسی شده از شما
-                خریداری کند. کارشناس روبوروند برای توضیحت بیشتر باشما تماس
-                میگیرد.
+                روبورند مایل است این سیم کارت را با قیمت کارشناسی شده از شما
+                خریداری کند. کارشناس روبورند برای توضیحات بیشتر با شما تماس
+                می‌گیرد.
               </p>
             </div>
             <Space value={24} />

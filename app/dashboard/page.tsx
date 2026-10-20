@@ -293,7 +293,7 @@ export default function DashboardPage() {
                 </div>
                 <div>
                   <h3 className="text-base font-bold text-grey">
-                    ثبت آگهی جدید در روبوروند
+                    ثبت آگهی جدید در روبورند
                   </h3>
                   <p className="text-xs text-grey-600">
                     سیم‌کارت‌های تکی یا بسته‌های خود را به سادگی آگهی کنید و به

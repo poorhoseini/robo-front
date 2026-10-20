@@ -214,7 +214,7 @@ export default function LoginModal() {
           {!!(loginStep === 0) && (
             <DialogTitle sx={{ p: 0 }} component="h1">
               <span className="text-2xl font-extrabold text-black">
-                روبوروند
+                روبورند
               </span>
             </DialogTitle>
           )}

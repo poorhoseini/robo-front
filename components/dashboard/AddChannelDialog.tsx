@@ -281,12 +281,12 @@ export default function AddChannelDialog({
             </div>
             <div className="flex h-full w-full flex-col items-start rounded-xl bg-neutral px-6 py-4 md:w-1/2">
               <h2 className="text-base font-medium leading-7 text-grey">
-                مراحل دسترسی ربات روبوروند به کانال شما:
+                مراحل دسترسی ربات روبورند به کانال شما:
               </h2>
               <Space value={4} />
               <div className="flxe-row flex w-full items-start rounded-md bg-biege p-2">
                 <p className="text-sm font-normal leading-7 text-grey">
-                  برای این کار ربات روبوروند باید در کانال شما دسترسی ارسال پیام
+                  برای این کار ربات روبورند باید در کانال شما دسترسی ارسال پیام
                   داشته باشد.
                 </p>
               </div>

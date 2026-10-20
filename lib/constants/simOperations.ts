@@ -49,7 +49,7 @@ export const channelOperationOption: OperationOption = {
   id: 4,
   title: "ارسال در کانال",
   subTitle:
-    "با استفاده از این سرویس می‌توانید آگهی خود را در کانال روبوروند یا کانال‌های شخصی خود بازنشر دهید",
+    "با استفاده از این سرویس می‌توانید آگهی خود را در کانال روبورند یا کانال‌های شخصی خود بازنشر دهید",
   imageSrc: "/icons/icon-megaphone.svg",
   operation: "channel",
   serviceTypes: ["simcard", "simPack", "simcardHighBid", "simPackHighBid"],

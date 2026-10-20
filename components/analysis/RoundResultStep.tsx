@@ -98,7 +98,7 @@ export default function RoundResultStep() {
       <div className="flex w-full flex-col items-center rounded-xl bg-biege-300 p-6">
         <div className="flex w-full flex-row items-center justify-between gap-8">
           <p className="text-lg font-medium leading-6 text-grey">
-            هوش مصنوعی روبوروند اولین و دقیق ترین ابزار هوشمند تخمین قیمت سیم
+            هوش مصنوعی روبورند اولین و دقیق ترین ابزار هوشمند تخمین قیمت سیم
             کارت می‌باشد که قیمت سیم کارت شما را تخمین می‌زند.
           </p>
           <div className="w-full max-w-[227px]">

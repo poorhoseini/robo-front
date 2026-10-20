@@ -301,7 +301,7 @@ export default function ChannelModal({
                         height={18}
                       />
                       <span className="text-sm font-normal leading-6 text-grey">
-                        کانال روبوروند
+                        کانال روبورند
                       </span>
                     </div>
                     <div className="flex flex-row items-center gap-2">

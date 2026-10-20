@@ -16,7 +16,7 @@ export default function DashboardMenu() {
   return (
     <div className="ltr top-20 w-full rounded-lg border-grey-100 bg-white px-4 pt-6 md:sticky md:max-h-[80vh] md:w-[270px] md:overflow-y-auto md:border">
       <div className="rtl flex h-full w-full flex-col items-center justify-start">
-        <h1 className="text-2xl font-bold leading-9 text-grey">روبوروند</h1>
+        <h1 className="text-2xl font-bold leading-9 text-grey">روبورند</h1>
         <Space value={16} />
         <HorizontalLine />
         <Space value={16} />
