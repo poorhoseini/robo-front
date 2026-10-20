@@ -70,18 +70,18 @@ export default function CardStack({
           {!noMoreButton && (
             <ResponsiveLink
               href={link}
-              className="flex flex-row items-center justify-end gap-1.5"
+              className="flex flex-row items-center justify-end gap-1.5 transition-opacity hover:opacity-80"
             >
               <div className="flex flex-row items-center text-sm font-medium text-grey md:text-xl">
                 <p className="hidden md:block">مشاهده بیشتر</p>
                 <p className="block text-xs font-normal text-grey md:hidden">بیشتر</p>
               </div>
-              <div className="flex h-5 w-5 items-center justify-center rounded-[4px] bg-blue-900 md:h-[28px] md:w-[28px]">
+              <div className="flex h-5 w-5 items-center justify-center rounded-[4px] bg-[#EAF5FF] transition-colors hover:bg-blue-100 md:h-6 md:w-6">
                 <Image
                   src="/icons/icon-arrow-left.svg"
                   alt="See More"
-                  width={14}
-                  height={14}
+                  width={12}
+                  height={12}
                 />
               </div>
             </ResponsiveLink>
@@ -89,7 +89,7 @@ export default function CardStack({
         </div>
       )}
 
-      <div className={`w-full overflow-x-auto md:overflow-x-clip`}>
+      <div className={`w-full overflow-x-auto scrollbar-none md:overflow-x-clip`}>
         <div
           className={`flex ${direction === "horizontal" ? "w-max min-w-full flex-row" : "w-full flex-col"} flex-nowrap items-center justify-start md:w-full md:flex-wrap ${gapClasses}`}
         >

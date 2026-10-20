@@ -13,10 +13,15 @@ import {
 import Image from "next/image";
 import ResponsiveLink from "@/components/general/ResponsiveLink";
 import PriceAndRoundAnalysisDialog from "@/components/cards/PriceAndRoundAnalysisDialog";
-import { GetRoundTypesResponseProps } from "@/lib/entities/roundType";
 import getRoundTypes from "@/lib/api/getRoundTypeList";
 import getProvinces from "@/lib/api/getProvinces";
-import { GetProvincesResponseProps } from "@/lib/entities/province";
+import {
+  figmaSpecialOffers,
+  figmaStores,
+  figmaDiscounts,
+  figmaLatestSimcards,
+  figmaMiddleActionButtons,
+} from "@/lib/constants/figmaMockData";
 
 export default async function Home() {
   let landingPageData: GetLandingPageResponseProps["data"] = {
@@ -83,7 +88,7 @@ export default async function Home() {
           <CardStack
             key={key}
             stackData={item}
-            gap={isSubItem ? 3 : 6}
+            gap={isSubItem ? 3 : 4}
             link={item.path}
             direction="vertical"
           />
@@ -95,7 +100,7 @@ export default async function Home() {
             href={item.path || ""}
             className="flex h-[93px] flex-1 flex-col items-center justify-center gap-2 rounded-2xl border border-grey-200 bg-white p-2.5 shadow-sm transition-all hover:shadow-md md:h-[100px] md:w-[120px]"
           >
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-grey text-white">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#3E424B] text-white">
               <Image
                 src="/icons/icon-plus-white.svg"
                 alt="Plus"
@@ -147,7 +152,7 @@ export default async function Home() {
         return (
           <section
             key={key}
-            className="grid w-full grid-cols-3 gap-3 px-4 md:flex md:w-full md:flex-row md:items-center md:justify-center md:gap-4"
+            className="grid w-full grid-cols-3 gap-2.5 px-4 md:flex md:w-full md:flex-row md:items-center md:justify-center md:gap-4"
           >
             {item.data?.map((subItem, index) =>
               renderItemByCardType(
@@ -164,11 +169,62 @@ export default async function Home() {
     }
   }
 
+  // Build mobile sections according to Figma design layout
+  const mobileSpecialOffer: LandingPageCard = {
+    cardType: "singleSim",
+    title: landingPageData?.cardDatas?.["specialOffer"]?.title || "پیشنهاد ویژه",
+    path:
+      landingPageData?.cardDatas?.["specialOffer"]?.path ||
+      "/search?searchType=simcard",
+    data: landingPageData?.cardDatas?.["specialOffer"]?.data?.length
+      ? landingPageData.cardDatas["specialOffer"].data
+      : figmaSpecialOffers,
+  };
+
+  const mobileBestStore: LandingPageCard = {
+    cardType: "store",
+    title: landingPageData?.cardDatas?.["bestStore"]?.title || "فروشگاه ها",
+    path: landingPageData?.cardDatas?.["bestStore"]?.path || "/search",
+    data: landingPageData?.cardDatas?.["bestStore"]?.data?.length
+      ? landingPageData.cardDatas["bestStore"].data
+      : figmaStores,
+  };
+
+  const mobileDiscount: LandingPageCard = {
+    cardType: "offPrice",
+    title: landingPageData?.cardDatas?.["discount"]?.title || "تخفیف دارها",
+    path:
+      landingPageData?.cardDatas?.["discount"]?.path ||
+      "/search?searchType=simcard",
+    data: landingPageData?.cardDatas?.["discount"]?.data?.length
+      ? landingPageData.cardDatas["discount"].data
+      : figmaDiscounts,
+  };
+
+  const mobileRowButtons: LandingPageCard =
+    landingPageData?.cardDatas?.["rowButton-pwa"]?.data?.length
+      ? landingPageData.cardDatas["rowButton-pwa"]
+      : figmaMiddleActionButtons;
+
+  const pwaGroupCard = landingPageData?.cardDatas?.["pwaGroup"]?.data?.[0] as
+    | LandingPageCard
+    | undefined;
+
+  const mobileLatestSims: LandingPageCard = {
+    cardType: "singleSim-table",
+    title: "آخرین سیم‌کارت‌ها:",
+    path: "/search?searchType=simcard",
+    data: pwaGroupCard?.data?.length
+      ? pwaGroupCard.data
+      : figmaLatestSimcards,
+  };
+
   return (
-    <div className="relative flex h-[100dvh] min-h-[100dvh] flex-col items-center gap-8 bg-neutral lg:h-full">
+    <div className="relative flex h-[100dvh] min-h-[100dvh] flex-col items-center gap-6 bg-[#F8F9FA] lg:h-full">
       <Header />
 
       <main className="mb-[68px] w-full max-w-7xl overflow-y-auto md:mb-0 md:overflow-y-visible">
+        {/* Desktop View */}
         <div className="hidden w-full md:flex md:flex-col md:gap-8">
           {landingPageData?.webList?.map((item, index) =>
             landingPageData?.cardDatas?.[item]
@@ -180,16 +236,14 @@ export default async function Home() {
               : null,
           )}
         </div>
-        <div className="flex w-full flex-col gap-8 pb-8 md:hidden">
-          {landingPageData?.pwaList?.map((item, index) =>
-            landingPageData?.cardDatas?.[item]
-              ? renderItemByCardType(
-                  landingPageData.cardDatas[item],
-                  index,
-                  "mobile",
-                )
-              : null,
-          )}
+
+        {/* Mobile View - Matches Figma Design Structure */}
+        <div className="flex w-full flex-col gap-6 pb-24 md:hidden">
+          {renderItemByCardType(mobileSpecialOffer, 0, "mobile")}
+          {renderItemByCardType(mobileBestStore, 1, "mobile")}
+          {renderItemByCardType(mobileDiscount, 2, "mobile")}
+          {renderItemByCardType(mobileRowButtons, 3, "mobile")}
+          {renderItemByCardType(mobileLatestSims, 4, "mobile")}
         </div>
       </main>
       <Footer selectedMenu="home" />

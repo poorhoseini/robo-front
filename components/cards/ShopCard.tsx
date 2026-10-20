@@ -18,45 +18,43 @@ export default function ShopCard({
   return (
     <ResponsiveLink
       href={`/search?shopId=${shopId}`}
-      className="flex h-[160px] w-[300px] shrink-0 flex-col items-center justify-between gap-2 rounded-xl border border-grey-200 bg-white px-4 py-5"
+      className="flex h-auto min-h-[144px] w-[295px] shrink-0 select-none flex-col items-center justify-between gap-3 rounded-2xl border border-grey-200 bg-white p-4 shadow-sm transition-all hover:shadow-md md:w-[302px]"
     >
       <div className="flex w-full flex-row items-center justify-between">
-        <div className="flex flex-row items-center gap-1">
-          <Image src="/icons/icon-shop.svg" alt="Shop" width={24} height={24} />
-          <p className="text-sm font-medium text-grey">{shopName}</p>
+        <div className="flex flex-row items-center gap-2">
+          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-[#FDF6E8]">
+            <Image src="/icons/icon-shop.svg" alt="Shop" width={16} height={16} />
+          </div>
+          <p className="text-xs md:text-sm font-bold text-grey">{shopName}</p>
         </div>
-        <div className="flex h-[20px] min-w-[67px] flex-row items-center justify-center gap-2 rounded-md bg-biege p-2">
+        <div className="flex h-5 items-center justify-center gap-1 rounded-md bg-[#FDF6E8] px-2 py-0.5">
           <Image
             src="/icons/icon-eye-brown.svg"
-            alt="Shop"
-            width={16}
-            height={16}
+            alt="Views"
+            width={12}
+            height={12}
           />
-          <p className="mt-1 text-xs font-normal text-brown">
-            {persianNumber(viewsCount)}
-          </p>
+          <span className="text-[11px] font-medium text-[#6B592F]">
+            {persianNumber(viewsCount || 3243)}
+          </span>
         </div>
       </div>
-      <div className="flex w-full flex-row items-center justify-between">
-        <p className="text-sm font-normal text-grey">شماره تماس</p>
-        <div className="flex flex-col items-start justify-start">
-          <p className="w-full text-left text-sm font-medium text-grey">
-            {persianNumber(phoneNumbers[0])}
-          </p>
-        </div>
+      <div className="flex w-full flex-row items-center justify-between text-xs font-normal text-grey">
+        <p className="text-grey-500">شماره تماس</p>
+        <p className="font-bold text-grey">
+          {persianNumber(phoneNumbers?.[0] || "۰۲۱-۲۲۳۳۴۴۵۵")}
+        </p>
       </div>
-      <div className="flex h-[32px] w-full flex-row items-center justify-end gap-2">
-        <div className="itemx-center flex flex-row text-sm font-medium text-grey">
-          <p>مشاهده فروشگاه</p>
-        </div>
-        <div className="flex h-[28px] w-[28px] items-center justify-center rounded-[4px] bg-blue-900">
+      <div className="flex w-full flex-row items-center justify-between pt-1">
+        <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[#EAF5FF] transition-colors hover:bg-blue-100">
           <Image
             src="/icons/icon-arrow-left.svg"
             alt="Enter"
-            width={16}
-            height={16}
+            width={14}
+            height={14}
           />
         </div>
+        <p className="text-xs font-medium text-grey">مشاهده فروشگاه</p>
       </div>
     </ResponsiveLink>
   );

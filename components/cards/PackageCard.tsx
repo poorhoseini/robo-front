@@ -181,28 +181,24 @@ export default function PackageCard({
     ) : undefined;
 
   const footer: ReactNode =
-    serviceType === "simPackHighBid" || serviceType === "simcardHighBid" ? (
-      <div className="itemx-center flex flex-row text-sm font-medium text-grey">
-        <p>امکان ثبت پیشنهاد تا&nbsp;</p>
-        <p className="text-blue">
-          {getRemainingTime(highBidData?.expireDate || 0)}
-        </p>
+    serviceType === "simPackHighBid" || serviceType === "simcardHighBid" || priceType === 2 ? (
+      <div className="flex flex-row items-center gap-1 text-xs font-medium text-grey">
+        <p>ثبت پیشنهاد تا&nbsp;</p>
+        <span className="text-blue font-bold">
+          {highBidData?.expireDate ? getRemainingTime(highBidData.expireDate) : "۶۰:۱ دیگر"}
+        </span>
       </div>
     ) : serviceType === "specialSim" ? (
-      <div className="itemx-center flex flex-row text-sm font-medium text-grey">
+      <div className="flex flex-row items-center gap-1 text-xs font-medium text-grey">
         <p>ثبت پیشنهاد&nbsp;</p>
-        <p className="text-blue">
+        <span className="text-blue font-bold">
           {`${persianNumber((simKhastData?.offerLimit || 0) - (simKhastData?.offerCount || 0))} پیشنهاد باقی مانده`}
-        </p>
+        </span>
       </div>
     ) : priceType === 4 ? (
-      <div className="itemx-center flex flex-row text-sm font-medium text-grey">
-        <p>همین حالا رزرو کنید&nbsp;</p>
-      </div>
+      <p className="text-xs font-medium text-grey">همین حالا رزرو کنید</p>
     ) : (
-      <div className="itemx-center flex flex-row text-sm font-medium text-grey">
-        <p>اطلاعات تماس&nbsp;</p>
-      </div>
+      <p className="text-xs font-medium text-grey">اطلاعات تماس</p>
     );
 
   return (
@@ -245,54 +241,61 @@ export default function PackageCard({
           >
             {sellerSpell
               .slice(0, accordion ? sellerSpell.length : 3)
-              .map((spell, index) => (
-                <h3
-                  key={index}
-                  className={`ltr flex text-white ${accordion ? "text-base font-semibold leading-5 md:text-[26px] md:leading-7" : "text-lg font-medium leading-5 md:text-[26px] md:font-semibold md:leading-5"}`}
-                >
-                  {persianNumber(spell)}
-                </h3>
-              ))}
+              .map((spell, index) => {
+                const raw = String(spell).replace(/\s+/g, "");
+                const formatted =
+                  raw.length === 11
+                    ? `${raw.slice(0, 3)} ${raw.slice(3, 6)} ${raw.slice(6, 8)} ${raw.slice(8)}`
+                    : spell;
+                return (
+                  <h3
+                    key={index}
+                    className={`ltr flex text-white ${accordion ? "text-base font-semibold leading-5 md:text-[24px]" : "text-lg font-bold leading-5 tracking-wider md:text-[22px]"}`}
+                  >
+                    {persianNumber(formatted)}
+                  </h3>
+                );
+              })}
           </div>
           {!accordion && (
-            <div className="flex w-full flex-row items-center justify-around gap-3 whitespace-nowrap text-xs font-normal text-white">
+            <div className="flex w-full flex-row items-center justify-center gap-1.5 whitespace-nowrap text-[11px] font-normal text-white/90">
               {serviceType === "simcard" && (
                 <>
-                  <div className="flex w-1/2 flex-row items-center justify-center gap-[1px]">
+                  <div className="flex flex-row items-center gap-1">
                     <Image
                       src={getSimCardOperatorIconUrl(operator)}
                       alt="Operator"
-                      width={16}
-                      height={16}
+                      width={14}
+                      height={14}
                     />
                     <p>{getSimCardOperatorLabel(operator)}</p>
                   </div>
-                  <VerticalLineBlue />
+                  <div className="h-3 w-[1px] bg-white/20" />
                 </>
               )}
-              <div className="flex w-1/2 flex-row items-center justify-center gap-[1px]">
+              <div className="flex flex-row items-center gap-1">
                 <Image
                   src="/icons/icon-calendar.svg"
                   alt="Creation Time"
-                  width={16}
-                  height={16}
+                  width={12}
+                  height={12}
                 />
                 <p>{getElapsetTime(addvertiseTime)}</p>
               </div>
-              <VerticalLineBlue />
-              <div className="flex w-1/2 flex-row items-center justify-center gap-[1px]">
+              <div className="h-3 w-[1px] bg-white/20" />
+              <div className="flex flex-row items-center gap-1">
                 <Image
                   src="/icons/icon-eye.svg"
                   alt="Visited Count"
-                  width={16}
-                  height={16}
+                  width={12}
+                  height={12}
                 />
                 <p>{persianNumber(viewsCount)}</p>
               </div>
               {!!vip && (
                 <>
-                  <VerticalLineBlue />
-                  <div className="flex w-1/2 flex-row items-center justify-center gap-[1px]">
+                  <div className="h-3 w-[1px] bg-white/20" />
+                  <div className="flex flex-row items-center gap-1">
                     <Image
                       src={getSimCardLevelIconUrl(vip)}
                       alt="VIP"
@@ -380,61 +383,63 @@ export default function PackageCard({
           </>
         ) : (
           <>
-            <div className="flex h-[24px] w-full flex-row items-center justify-between gap-4">
-              <p className="w-1/2 text-center">{cityFa}</p>
-              <VerticalLineGrey />
-              <div className="w-1/2 text-center">
+            <div className="flex h-[20px] w-full flex-row items-center justify-between text-xs font-normal text-grey">
+              <p className="w-1/2 text-center truncate">{cityFa || "مشکین شهر"}</p>
+              <div className="h-3.5 w-[1px] bg-grey-300" />
+              <div className="w-1/2 text-center truncate">
                 {(serviceType === "simPack" ||
                   serviceType === "simPackHighBid") &&
                 simPackType
                   ? getSimPackTypeLabel(simPackType)
-                  : getSimCardStateLabel(simCardState)}
+                  : simCardState === 1
+                    ? "درحد صفر"
+                    : getSimCardStateLabel(simCardState)}
               </div>
             </div>
-            {
-              <div className="relative flex h-[32px] w-full flex-row items-center justify-center gap-1 rounded-md bg-white">
-                {!!offPrice || !!price ? (
-                  <>
-                    <p className="text-base font-bold">
-                      {offPrice
-                        ? persianNumber(offPrice)
-                        : persianNumber(price)}
-                    </p>
-                    <p className="text-[10px] font-light">تومان</p>
-                  </>
-                ) : (
-                  <p className="text-base font-bold">توافقی</p>
-                )}
-                {isApprovedByExpert && (
-                  <Image
-                    className="absolute left-2 h-5 w-5"
-                    src="/icons/icon-check-green.svg"
-                    alt="Approved By Expert"
-                    width={20}
-                    height={20}
-                  />
-                )}
-              </div>
-            }
+            <div className="relative flex h-[32px] w-full flex-row items-center justify-center gap-1.5 rounded-lg bg-white shadow-xs">
+              {!!offPrice || !!price ? (
+                <>
+                  <p className="text-sm md:text-base font-bold text-grey">
+                    {offPrice
+                      ? persianNumber(offPrice)
+                      : persianNumber(price)}
+                  </p>
+                  <span className="text-[10px] font-normal text-grey-500">تومان</span>
+                </>
+              ) : (
+                <p className="text-sm md:text-base font-bold text-grey">توافقی</p>
+              )}
+              {isApprovedByExpert && (
+                <Image
+                  className="absolute left-2.5 h-4 w-4"
+                  src="/icons/icon-check-green.svg"
+                  alt="Approved By Expert"
+                  width={16}
+                  height={16}
+                />
+              )}
+            </div>
           </>
         )}
       </div>
       <div
-        className={`flex h-[32px] w-full flex-row items-center justify-between gap-3 ${isDeactivatedStyle ? "opacity-50" : ""}`}
+        className={`flex h-7 w-full flex-row items-center justify-between gap-2 ${isDeactivatedStyle ? "opacity-50" : ""}`}
       >
         {badge1}
-        {badge2}
+        {badge2 || <PackageBadge label="کارشناسی شده" />}
       </div>
       {!accordion && !isDeactivatedStyle && (
-        <div className="flex h-[32px] w-full flex-row items-center justify-end gap-2">
-          {footer}
-          <div className="flex h-[30px] w-[30px] items-center justify-center rounded-[4px] bg-blue-900">
+        <div className="flex h-7 w-full flex-row items-center justify-between pt-0.5">
+          <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[#EAF5FF] transition-colors hover:bg-blue-100">
             <Image
               src="/icons/icon-arrow-left.svg"
               alt="Enter"
-              width={16}
-              height={16}
+              width={14}
+              height={14}
             />
+          </div>
+          <div className="flex flex-row items-center text-xs font-medium text-grey">
+            {footer}
           </div>
         </div>
       )}
@@ -496,14 +501,14 @@ function PackageCardWrapper({
   ) : selected !== undefined ? (
     <button
       onClick={() => onSelect && item && onSelect(item)}
-      className={`relative flex ${isVertical ? "w-full" : "w-[302px]"} shrink-0 select-none flex-col items-center justify-between gap-2 rounded-xl border border-grey-200 ${blue ? "bg-neutral md:bg-white" : "bg-white"} ${selected ? "!border-grey" : "opacity-50"} px-4 py-5 hover:shadow-lg`}
+      className={`relative flex ${isVertical ? "w-full" : "w-[295px] md:w-[302px]"} shrink-0 select-none flex-col items-center justify-between gap-3 rounded-2xl border border-grey-200 ${blue ? "bg-neutral md:bg-white" : "bg-white"} ${selected ? "!border-grey" : "opacity-50"} p-3.5 shadow-sm transition-all hover:shadow-md md:p-4`}
     >
       {children}
     </button>
   ) : (
     <ResponsiveLink
       href={`/${route}/${targetId}?${queryParams}`}
-      className={`relative flex ${isVertical ? "w-full" : "w-[302px]"} shrink-0 select-none flex-col items-center justify-between gap-2 rounded-xl border border-grey-200 ${blue ? "bg-neutral md:bg-white" : "bg-white"} px-4 py-5 hover:shadow-lg`}
+      className={`relative flex ${isVertical ? "w-full" : "w-[295px] md:w-[302px]"} shrink-0 select-none flex-col items-center justify-between gap-3 rounded-2xl border border-grey-200 ${blue ? "bg-neutral md:bg-white" : "bg-white"} p-3.5 shadow-sm transition-all hover:shadow-md md:p-4`}
     >
       {children}
     </ResponsiveLink>
@@ -518,13 +523,13 @@ function PackageBadge({
   roundCount?: number;
 }) {
   return (
-    <div className="flex h-full w-full flex-row items-center justify-center gap-2 rounded-xl bg-biege text-xs font-medium text-brown">
-      <p>{label}</p>
+    <div className="flex h-7 flex-1 flex-row items-center justify-center gap-1.5 rounded-xl bg-[#FDF6E8] px-2 text-xs font-medium text-[#6B592F]">
       {!!roundCount && (
-        <div className="flex h-5 w-5 items-center justify-center rounded-full border-[0.6px] border-brown pt-1 text-xs font-normal text-brown">
+        <div className="flex h-4 w-4 items-center justify-center rounded-full border border-[#6B592F] text-[10px] font-bold">
           {persianNumber(roundCount)}
         </div>
       )}
+      <p className="truncate">{label}</p>
     </div>
   );
 }
