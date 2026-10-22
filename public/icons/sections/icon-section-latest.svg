@@ -1,0 +1,11 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="32" height="32" rx="9" fill="#EAF5FF"/>
+  <!-- SIM card base -->
+  <path d="M9 10C9 8.34315 10.3431 7 12 7H18.5858C19.3815 7 20.1447 7.31607 20.7071 7.87868L22.1213 9.29289C22.6839 9.8555 23 10.6187 23 11.4142V22C23 23.6569 21.6569 25 20 25H12C10.3431 25 9 23.6569 9 22V10Z" fill="#2897FF"/>
+  <!-- SIM chip -->
+  <rect x="12" y="13" width="8" height="6" rx="1.5" fill="#FBEFD2" stroke="#FF9F51" stroke-width="1"/>
+  <path d="M14 13V19M18 13V19M12 16H20" stroke="#FF9F51" stroke-width="0.8" stroke-linecap="round"/>
+  <!-- Clock / Latest badge on top-right corner -->
+  <circle cx="22" cy="10" r="4.5" fill="#FF9F51" stroke="#EAF5FF" stroke-width="1.5"/>
+  <path d="M22 8V10.2L23.5 11" stroke="white" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

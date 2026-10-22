@@ -29,8 +29,8 @@ export default function ServicesIntroductionSection() {
     <section className="flex w-full flex-col items-center gap-8">
       <div className="flex w-full flex-row items-center gap-2">
         <Image
-          src="/icons/icon-close-square.svg"
-          alt="Special Offers"
+          src="/icons/sections/icon-section-services.svg"
+          alt="معرفی سرویس ها"
           width={32}
           height={32}
         />

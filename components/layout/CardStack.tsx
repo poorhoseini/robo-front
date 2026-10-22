@@ -11,6 +11,7 @@ import ResponsiveLink from "../general/ResponsiveLink";
 import PackageSkeleton, {
   StoreCardSkeleton,
 } from "../skeletons/PackageSkeleton";
+import { getSectionIcon } from "@/lib/utils/getSectionIcon";
 
 type CardStackProps = {
   stackData: LandingPageCard;
@@ -24,6 +25,7 @@ type CardStackProps = {
   onSelect?: (item: SimKhast | SingleSimCard | SimPack) => void;
   isDashboardRoute?: boolean;
   isSubItem?: boolean;
+  iconSrc?: string;
 };
 
 export default function CardStack({
@@ -38,9 +40,15 @@ export default function CardStack({
   onSelect,
   isDashboardRoute = false,
   isSubItem = false,
+  iconSrc,
 }: CardStackProps) {
   const packages: LandingPageCard["data"] = stackData.data;
   const hasItems = !!(packages && packages.length);
+  const sectionIcon = getSectionIcon(
+    stackData.cardType,
+    stackData.title,
+    iconSrc,
+  );
   let gapClasses;
 
   switch (gap) {
@@ -61,10 +69,10 @@ export default function CardStack({
         <div className="flex w-full flex-row items-center justify-between gap-2">
           <div className="flex flex-row items-center gap-2">
             <Image
-              src="/icons/icon-close-square.svg"
-              alt={stackData.title}
-              width={24}
-              height={24}
+              src={sectionIcon}
+              alt={stackData.title || "Section"}
+              width={32}
+              height={32}
               className="h-6 w-6 md:h-8 md:w-8"
             />
             <h2 className="text-sm font-bold text-grey md:text-2xl">

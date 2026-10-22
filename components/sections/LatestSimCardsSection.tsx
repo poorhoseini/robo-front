@@ -80,8 +80,8 @@ export default function LatestSimCardsSection() {
     <section className="flex w-full flex-col items-center gap-8">
       <div className="flex w-full flex-row items-center gap-2">
         <Image
-          src="/icons/icon-close-square.svg"
-          alt="Special Offers"
+          src="/icons/sections/icon-section-latest.svg"
+          alt="آخرین سیم کارت ها"
           width={32}
           height={32}
         />
@@ -290,7 +290,13 @@ export default function LatestSimCardsSection() {
                       <h3 className="ltr w-[176px] text-end text-base font-medium">
                         {persianNumber(item.sellerSpel)}
                       </h3>
-                      <h3 className="w-[176px]">{persianNumber(item.price)}</h3>
+                      <h3 className="w-[176px]">
+                        {item.priceType === 1 ||
+                        !item.price ||
+                        Number(item.price) === 0
+                          ? "توافقی"
+                          : persianNumber(item.offPrice || item.price)}
+                      </h3>
                       <h3 className="w-[176px]">
                         {getSimCardStateLabel(item.state)}
                       </h3>

@@ -1,0 +1,10 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="32" height="32" rx="9" fill="#EAF5FF"/>
+  <!-- Back SIM card -->
+  <path d="M12 9C12 7.89543 12.8954 7 14 7H19.5858C20.1163 7 20.6251 7.21071 21 7.58579L23.4142 10C23.7893 10.3749 24 10.8837 24 11.4142V20C24 21.1046 23.1046 22 22 22H14C12.8954 22 12 21.1046 12 20V9Z" fill="#93CBFF"/>
+  <!-- Front SIM card -->
+  <path d="M8 12C8 10.8954 8.89543 10 10 10H15.5858C16.1163 10 16.6251 10.2107 17 10.5858L19.4142 13C19.7893 13.3749 20 13.8837 20 14.4142V23C20 24.1046 19.1046 25 18 25H10C8.89543 25 8 24.1046 8 23V12Z" fill="#2897FF" stroke="#EAF5FF" stroke-width="1.2"/>
+  <!-- Chip on front SIM card -->
+  <rect x="10.5" y="15" width="7" height="5" rx="1" fill="#FBEFD2" stroke="#FF9F51" stroke-width="0.8"/>
+  <path d="M12.5 15V20M15.5 15V20M10.5 17.5H17.5" stroke="#FF9F51" stroke-width="0.6"/>
+</svg>

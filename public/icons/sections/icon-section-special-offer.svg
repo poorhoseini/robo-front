@@ -1,0 +1,10 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="32" height="32" rx="9" fill="#FBEFD2"/>
+  <!-- Star shape -->
+  <path d="M16 7L18.47 12.01L24 12.82L20 16.71L20.94 22.22L16 19.62L11.06 22.22L12 16.71L8 12.82L13.53 12.01L16 7Z" fill="#FF9F51" stroke="#E67E22" stroke-width="0.8" stroke-linejoin="round"/>
+  <!-- Inner shine -->
+  <path d="M16 9.5L17.7 13.05L21.6 13.62L18.8 16.35L19.46 20.21L16 18.39L12.54 20.21L13.2 16.35L10.4 13.62L14.3 13.05L16 9.5Z" fill="#FFB21C"/>
+  <circle cx="16" cy="15.5" r="2" fill="white" fill-opacity="0.9"/>
+  <!-- Tiny sparkles -->
+  <path d="M24 7.5L24.5 9L26 9.5L24.5 10L24 11.5L23.5 10L22 9.5L23.5 9L24 7.5Z" fill="#FF9F51"/>
+</svg>

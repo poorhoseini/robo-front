@@ -1,0 +1,8 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="32" height="32" rx="9" fill="#EAF5FF"/>
+  <!-- SIM card base -->
+  <path d="M10 9C10 7.89543 10.8954 7 12 7H17.5858C18.1163 7 18.6251 7.21071 19 7.58579L21.4142 10C21.7893 10.3749 22 10.8837 22 11.4142V23C22 24.1046 21.1046 25 20 25H12C10.8954 25 10 24.1046 10 23V9Z" fill="#2897FF"/>
+  <!-- Chip -->
+  <rect x="12.5" y="13" width="7" height="6" rx="1.2" fill="#FBEFD2" stroke="#FF9F51" stroke-width="0.8"/>
+  <path d="M14.5 13V19M17.5 13V19M12.5 16H19.5" stroke="#FF9F51" stroke-width="0.7" stroke-linecap="round"/>
+</svg>

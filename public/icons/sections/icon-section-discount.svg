@@ -1,0 +1,11 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="32" height="32" rx="9" fill="#FBEFD2"/>
+  <!-- Tag / Badge shape -->
+  <path d="M7 14.5L14.5 7H22C23.6569 7 25 8.34315 25 10V17.5L17.5 25C16.3284 26.1716 14.4289 26.1716 13.2574 25L7 18.7426C5.82843 17.5711 5.82843 15.6716 7 14.5Z" fill="#FF9F51" stroke="#E67E22" stroke-width="1" stroke-linejoin="round"/>
+  <!-- Tag hole -->
+  <circle cx="21" cy="11" r="1.5" fill="#FBEFD2"/>
+  <!-- Percent symbol on tag -->
+  <circle cx="12" cy="15" r="1.5" fill="white"/>
+  <circle cx="18" cy="19" r="1.5" fill="white"/>
+  <path d="M19 14L11 20" stroke="white" stroke-width="1.6" stroke-linecap="round"/>
+</svg>

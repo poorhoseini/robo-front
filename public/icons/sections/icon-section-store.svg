@@ -1,0 +1,13 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="32" height="32" rx="9" fill="#FBEFD2"/>
+  <!-- Store building walls -->
+  <rect x="8.5" y="14" width="15" height="11" rx="1.5" fill="#FFE3A8" stroke="#404040" stroke-width="1.2"/>
+  <!-- Door -->
+  <path d="M13.5 25V18.5C13.5 17.6716 14.1716 17 15 17H17C17.8284 17 18.5 17.6716 18.5 18.5V25" fill="#FF9F51" stroke="#404040" stroke-width="1.2"/>
+  <!-- Awning roof -->
+  <path d="M7 14L8.2 8.5C8.35 7.65 9.08 7 9.94 7H22.06C22.92 7 23.65 7.65 23.8 8.5L25 14H7Z" fill="#FF9F51" stroke="#404040" stroke-width="1.2" stroke-linejoin="round"/>
+  <!-- Awning stripes -->
+  <path d="M11 7.2L10.5 13.8M16 7V14M21 7.2L21.5 13.8" stroke="#FBEFD2" stroke-width="1.2"/>
+  <!-- Scallops -->
+  <path d="M7 14C7 15.1 7.9 16 9 16C10.1 16 11 15.1 11 14C11 15.1 11.9 16 13 16C14.1 16 15 15.1 15 14C15 15.1 15.9 16 17 16C18.1 16 19 15.1 19 14C19 15.1 19.9 16 21 16C22.1 16 23 15.1 23 14C23 15.1 23.9 16 25 16" stroke="#404040" stroke-width="1.2" stroke-linecap="round"/>
+</svg>
