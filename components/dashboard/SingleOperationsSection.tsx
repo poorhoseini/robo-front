@@ -50,7 +50,7 @@ export default function SingleOperationsSection({
   };
 
   const handleClickOption = (operation: GroupOperationType) => {
-    selectSingleOperation(operation);
+    selectSingleOperation(operation, selectedItem, serviceType);
     handleOpen();
   };
 

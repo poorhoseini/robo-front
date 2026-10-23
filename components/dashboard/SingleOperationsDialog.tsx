@@ -71,7 +71,7 @@ export default function SingleOperationsDialog({
   };
 
   const handleClickOption = (operation: GroupOperationType) => {
-    selectSingleOperation(operation);
+    selectSingleOperation(operation, selectedItem, serviceType);
     handleOpenOperationDialog();
   };
 

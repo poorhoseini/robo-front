@@ -21,7 +21,11 @@ export type GroupOperation = {
   actions: {
     setServiceType: (serviceType: ServiceType) => void;
     selectGroupOperation: (value?: GroupOperationType) => void;
-    selectSingleOperation: (value?: GroupOperationType) => void;
+    selectSingleOperation: (
+      value?: GroupOperationType,
+      item?: SimKhast | SingleSimCard | SimPack,
+      serviceType?: ServiceType,
+    ) => void;
     addItem: (
       item: SimKhast | SingleSimCard | SimPack,
       serviceType: ServiceType,
@@ -39,12 +43,22 @@ const useGroupOperationStore = create<GroupOperation>((set) => ({
     setServiceType: (serviceType) => set(() => ({ serviceType: serviceType })),
     selectGroupOperation: (value) =>
       set(() => ({ operation: value, selectedItems: [] })),
-    selectSingleOperation: (value) => set(() => ({ operation: value })),
-    addItem: (item, serviceType) =>
-      set((prev) => ({
-        serviceType: serviceType,
-        selectedItems: [...prev.selectedItems, item],
+    selectSingleOperation: (value, item, serviceType) =>
+      set(() => ({
+        operation: value,
+        ...(item && { selectedItems: [item] }),
+        ...(serviceType && { serviceType: serviceType }),
       })),
+    addItem: (item, serviceType) =>
+      set((prev) => {
+        if (prev.selectedItems.some((existing) => existing._id === item._id)) {
+          return { serviceType: serviceType };
+        }
+        return {
+          serviceType: serviceType,
+          selectedItems: [...prev.selectedItems, item],
+        };
+      }),
     removeItem: (value) =>
       set((prev) => ({
         selectedItems: prev.selectedItems.filter(
