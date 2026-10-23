@@ -174,7 +174,7 @@ export default function UpdateSimPriceModal({
       refrenceId: id,
       newPriceType: Number(priceTypeRadioValue),
       newPrice: isNegotiableSelected ? 0 : numericPrice,
-      socialReply: true,
+      socialReply: false,
     };
 
     try {
