@@ -25,7 +25,10 @@ import {
 } from "@mui/material";
 import { CartDialogContext } from "@/lib/providers/CartDialogProvider";
 import Image from "next/image";
-import { persianNumber } from "@/lib/helpers/persianNumber.helper";
+import {
+  formatPhoneNumber,
+  persianNumber,
+} from "@/lib/helpers/persianNumber.helper";
 import {
   getSimCardLevelLabel,
   getSimCardStateLabel,
@@ -325,7 +328,7 @@ export default function CartModal({
                     <div className="flex w-full flex-col gap-3 rounded-2xl border border-grey-200 bg-white p-6">
                       <div className="mb-4 flex w-full items-center justify-center rounded-t-2xl bg-primary p-4 text-2xl font-semibold text-white">
                         <p className="ltr">
-                          {persianNumber(cart.preview.condition.sellerSpel)}
+                          {formatPhoneNumber(cart.preview.condition.sellerSpel)}
                         </p>
                       </div>
                       <div className="flex w-full flex-row items-center justify-between">
@@ -364,7 +367,7 @@ export default function CartModal({
                   >
                     <div className="mb-4 flex w-full items-center justify-center rounded-t-2xl bg-primary p-4 text-2xl font-semibold text-white">
                       <p className="ltr">
-                        {persianNumber(item?.sellerSpel || "")}
+                        {formatPhoneNumber(item?.sellerSpel || "")}
                       </p>
                     </div>
                     <div className="flex w-full flex-row items-center justify-between">
@@ -434,8 +437,8 @@ export default function CartModal({
                         <p className="text-base font-normal text-grey">
                           شماره پیشنهادی
                         </p>
-                        <p className="text-base font-normal text-grey">
-                          {persianNumber(cart.preview.offer.phoneNumber)}
+                        <p className="text-base font-normal text-grey ltr">
+                          {formatPhoneNumber(cart.preview.offer.phoneNumber)}
                         </p>
                       </div>
                       <HorizontalLine />
@@ -538,9 +541,9 @@ function CartPreview({
           {sellerSpells.map((item, index) => (
             <div
               key={index}
-              className="flex h-[52px] w-[250px] items-center justify-center rounded-md bg-[#f7f7f7] p-4 text-base font-medium leading-5 text-grey"
+              className="flex h-[52px] w-[250px] items-center justify-center rounded-md bg-[#f7f7f7] p-4 text-base font-medium leading-5 text-grey ltr"
             >
-              {persianNumber(item)}
+              {formatPhoneNumber(item)}
             </div>
           ))}
         </div>

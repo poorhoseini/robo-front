@@ -10,7 +10,10 @@ import {
   getSimCardStateLabel,
   getSimCardTypeLabel,
 } from "@/lib/helpers/decodeSimCardData";
-import { persianNumber } from "@/lib/helpers/persianNumber.helper";
+import {
+  formatPhoneNumber,
+  persianNumber,
+} from "@/lib/helpers/persianNumber.helper";
 import { AuthContext } from "@/lib/providers/AuthProvider";
 import { LoginDialogContext } from "@/lib/providers/LoginDialogProvider";
 import {
@@ -145,8 +148,8 @@ export default function PredictByExpertDetailsDialog({
                   {getSimCardStateLabel(predictDetail.state)}
                 </div>
               </div>
-              <p className="text-3xl font-medium leading-8 text-white">
-                {persianNumber(predictDetail.phoneNumber)}
+              <p className="text-3xl font-medium leading-8 text-white ltr">
+                {formatPhoneNumber(predictDetail.phoneNumber)}
               </p>
             </div>
             <Space value={24} />

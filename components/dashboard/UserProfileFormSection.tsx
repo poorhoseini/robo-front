@@ -21,6 +21,7 @@ import getUserData from "@/lib/api/getUserData";
 import JalaliDatePicker from "../general/JalaliDatePicker";
 import moment from "moment-jalaali";
 import UserProfileEmailSection from "./UserProfileEmailSection";
+import { formatPhoneNumber } from "@/lib/helpers/persianNumber.helper";
 
 export default function UserProfileFormSection() {
   const { auth, resetAuth } = useContext(AuthContext);
@@ -221,8 +222,9 @@ export default function UserProfileFormSection() {
               <TextField
                 disabled
                 size="medium"
-                value={userProfile?.phoneNumber || ""}
+                value={formatPhoneNumber(userProfile?.phoneNumber || "")}
                 sx={{ width: "100%" }}
+                inputProps={{ className: "ltr text-start" }}
                 variant="outlined"
               />
             </div>

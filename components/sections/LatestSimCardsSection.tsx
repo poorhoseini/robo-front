@@ -9,7 +9,10 @@ import {
   getSimCardStateLabel,
   getSimCardTypeLabel,
 } from "@/lib/helpers/decodeSimCardData";
-import { persianNumber } from "@/lib/helpers/persianNumber.helper";
+import {
+  formatPhoneNumber,
+  persianNumber,
+} from "@/lib/helpers/persianNumber.helper";
 import { getElapsetTime } from "@/lib/helpers/timeDifference";
 import {
   Checkbox,
@@ -288,7 +291,7 @@ export default function LatestSimCardsSection() {
                       className="flex h-[64px] w-full flex-row items-center bg-white px-6 py-2 text-sm font-normal text-grey hover:bg-[#f5f5f5]"
                     >
                       <h3 className="ltr w-[176px] text-end text-base font-medium">
-                        {persianNumber(item.sellerSpel)}
+                        {formatPhoneNumber(item.sellerSpel)}
                       </h3>
                       <h3 className="w-[176px]">
                         {item.priceType === 1 ||

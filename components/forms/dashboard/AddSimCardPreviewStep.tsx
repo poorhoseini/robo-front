@@ -4,7 +4,10 @@ import {
   getSimCardPriceTypeLabel,
   getSimCardStateLabel,
 } from "@/lib/helpers/decodeSimCardData";
-import { persianNumber } from "@/lib/helpers/persianNumber.helper";
+import {
+  formatPhoneNumber,
+  persianNumber,
+} from "@/lib/helpers/persianNumber.helper";
 import Image from "next/image";
 import { useMemo } from "react";
 import {
@@ -67,8 +70,8 @@ export default function AddSimCardPreviewStep({
     <div className="flex h-full w-full flex-col items-center justify-between pb-24 md:pb-0">
       <div className="flex w-full flex-col items-center gap-4 rounded-lg bg-white p-4 md:p-0">
         <div className="flex w-full items-center justify-center rounded-xl bg-primary p-4">
-          <p className="text-3xl font-medium text-white">
-            {persianNumber(phoneNumber)}
+          <p className="text-3xl font-medium text-white ltr">
+            {formatPhoneNumber(phoneNumber)}
           </p>
         </div>
         <div className="flex w-full flex-col items-center gap-6 rounded-lg border border-grey-200 p-6">

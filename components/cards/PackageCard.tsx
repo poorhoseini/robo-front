@@ -13,7 +13,10 @@ import {
   getSimCardStateLabel,
   getSimPackTypeLabel,
 } from "@/lib/helpers/decodeSimCardData";
-import { persianNumber } from "@/lib/helpers/persianNumber.helper";
+import {
+  formatPhoneNumber,
+  persianNumber,
+} from "@/lib/helpers/persianNumber.helper";
 import { getElapsetTime, getRemainingTime } from "@/lib/helpers/timeDifference";
 import Image from "next/image";
 import ResponsiveLink from "../general/ResponsiveLink";
@@ -241,21 +244,14 @@ export default function PackageCard({
           >
             {sellerSpell
               .slice(0, accordion ? sellerSpell.length : 3)
-              .map((spell, index) => {
-                const raw = String(spell).replace(/\s+/g, "");
-                const formatted =
-                  raw.length === 11
-                    ? `${raw.slice(0, 3)} ${raw.slice(3, 6)} ${raw.slice(6, 8)} ${raw.slice(8)}`
-                    : spell;
-                return (
-                  <h3
-                    key={index}
-                    className={`ltr flex text-white ${accordion ? "text-base font-semibold leading-5 md:text-[24px]" : "text-lg font-bold leading-5 tracking-wider md:text-[22px]"}`}
-                  >
-                    {persianNumber(formatted)}
-                  </h3>
-                );
-              })}
+              .map((spell, index) => (
+                <h3
+                  key={index}
+                  className={`ltr flex text-white ${accordion ? "text-base font-semibold leading-5 md:text-[24px]" : "text-lg font-bold leading-5 tracking-wider md:text-[22px]"}`}
+                >
+                  {formatPhoneNumber(spell)}
+                </h3>
+              ))}
           </div>
           {!accordion && (
             <div className="flex w-full flex-row items-center justify-center gap-1.5 whitespace-nowrap text-[11px] font-normal text-white/90">

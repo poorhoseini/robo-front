@@ -13,7 +13,10 @@ import {
   getSimCardOperatorLabel,
   getSimCardStateLabel,
 } from "@/lib/helpers/decodeSimCardData";
-import { persianNumber } from "@/lib/helpers/persianNumber.helper";
+import {
+  formatPhoneNumber,
+  persianNumber,
+} from "@/lib/helpers/persianNumber.helper";
 import { AuthContext } from "@/lib/providers/AuthProvider";
 import { CartDialogContext } from "@/lib/providers/CartDialogProvider";
 import { LoginDialogContext } from "@/lib/providers/LoginDialogProvider";
@@ -128,7 +131,7 @@ export default function AddSimKhastPreviewStep({
       <div className="flex w-full flex-col items-center gap-4 rounded-lg bg-white p-4 md:p-0">
         <div className="flex w-full items-center justify-center rounded-xl bg-primary p-4">
           <p className="ltr text-3xl font-medium text-white">
-            {persianNumber(
+            {formatPhoneNumber(
               "09" +
                 (digit1 || "*") +
                 (digit2 || "*") +

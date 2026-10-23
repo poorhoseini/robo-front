@@ -12,7 +12,10 @@ import {
   GetMyWalletBalanceResponseProps,
   WalletBalance,
 } from "@/lib/entities/wallet";
-import { persianNumber } from "@/lib/helpers/persianNumber.helper";
+import {
+  formatPhoneNumber,
+  persianNumber,
+} from "@/lib/helpers/persianNumber.helper";
 import { AuthContext } from "@/lib/providers/AuthProvider";
 import { LoginDialogContext } from "@/lib/providers/LoginDialogProvider";
 import { Button, Skeleton } from "@mui/material";
@@ -161,8 +164,8 @@ export default function DashboardPage() {
                   </div>
                   <p className="text-sm font-normal text-grey-600">
                     شماره تماس:{" "}
-                    <span className="font-medium text-grey">
-                      {persianNumber(auth.phoneNumber) || "---"}
+                    <span className="font-medium text-grey ltr inline-block">
+                      {formatPhoneNumber(auth.phoneNumber) || "---"}
                     </span>
                   </p>
                 </div>
@@ -410,10 +413,20 @@ export default function DashboardPage() {
                 </div>
                 <div className="w-full flex-col items-start gap-1">
                   <h2 className="text-sm font-medium leading-6 text-grey">
-                    {auth.name || persianNumber(auth.phoneNumber)}
+                    {auth.name || (
+                      <span className="ltr inline-block">
+                        {formatPhoneNumber(auth.phoneNumber)}
+                      </span>
+                    )}
                   </h2>
                   <p className="text-xs font-normal leading-6 text-grey">
-                    {auth.name ? persianNumber(auth.phoneNumber) : ""}
+                    {auth.name ? (
+                      <span className="ltr inline-block">
+                        {formatPhoneNumber(auth.phoneNumber)}
+                      </span>
+                    ) : (
+                      ""
+                    )}
                   </p>
                 </div>
               </div>

@@ -1,5 +1,8 @@
 import { StoreAdvertiser, UserAdvertiser } from "@/lib/entities/advertiser";
-import { persianNumber } from "@/lib/helpers/persianNumber.helper";
+import {
+  formatPhoneNumber,
+  persianNumber,
+} from "@/lib/helpers/persianNumber.helper";
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment } from "react";
@@ -93,7 +96,7 @@ export default function AdvertiserCard({
           {phoneNumbers.map((phone, index) => (
             <Fragment key={index}>
               {(index && <VerticalLineSmall />) || ""}
-              <p>{persianNumber(phone)}</p>
+              <p className="ltr">{formatPhoneNumber(phone)}</p>
             </Fragment>
           ))}
         </div>

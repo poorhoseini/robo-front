@@ -1,4 +1,7 @@
-import { persianNumber } from "@/lib/helpers/persianNumber.helper";
+import {
+  formatPhoneNumber,
+  persianNumber,
+} from "@/lib/helpers/persianNumber.helper";
 import Image from "next/image";
 import Space from "../general/Space";
 
@@ -30,7 +33,7 @@ export default function OfferCard({
       >
         <h3 className="ltr flex flex-col items-center gap-1 text-[26px] font-semibold leading-7 text-white">
           {title.slice(0, 3).map((item, index) => (
-            <span key={index}>{persianNumber(item)}</span>
+            <span key={index}>{formatPhoneNumber(item)}</span>
           ))}
         </h3>
         <Space value={16} />

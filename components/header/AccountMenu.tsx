@@ -13,6 +13,7 @@ import { ResponseError } from "@/lib/api/error";
 import { toast } from "react-toastify";
 import { LoginDialogContext } from "@/lib/providers/LoginDialogProvider";
 import { IconButton, useMediaQuery, useTheme } from "@mui/material";
+import { formatPhoneNumber } from "@/lib/helpers/persianNumber.helper";
 
 export default function AccountMenu({ auth }: { auth: Auth }) {
   const theme = useTheme();
@@ -108,8 +109,8 @@ export default function AccountMenu({ auth }: { auth: Auth }) {
               <p className="text-sm font-medium text-grey">
                 {auth.name === "Undefined" ? "کاربر روبورند" : auth.name}
               </p>
-              <p className="text-xs font-normal text-grey">
-                {persianNumber(auth.phoneNumber)}
+              <p className="text-xs font-normal text-grey ltr">
+                {formatPhoneNumber(auth.phoneNumber)}
               </p>
             </div>
           </div>

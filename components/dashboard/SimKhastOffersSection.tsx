@@ -1,6 +1,9 @@
 "use client";
 
-import { persianNumber } from "@/lib/helpers/persianNumber.helper";
+import {
+  formatPhoneNumber,
+  persianNumber,
+} from "@/lib/helpers/persianNumber.helper";
 import { SimKhastOffer } from "@/lib/entities/simKhastOffer";
 import Space from "../general/Space";
 import { Fragment } from "react";
@@ -70,11 +73,11 @@ export default function SimKhastOffersSection({
                   .toLocaleTimeString("fa-IR")}
               </p>
             </div>
-            <p className="w-1/4 text-center text-base font-semibold leading-5 text-grey">
-              {persianNumber(offer.userData.phoneNumber)}
+            <p className="w-1/4 text-center text-base font-semibold leading-5 text-grey ltr">
+              {formatPhoneNumber(offer.userData.phoneNumber)}
             </p>
-            <p className="w-1/4 text-center text-base font-semibold leading-5 text-grey">
-              {persianNumber(offer.phoneNumber)}
+            <p className="w-1/4 text-center text-base font-semibold leading-5 text-grey ltr">
+              {formatPhoneNumber(offer.phoneNumber)}
             </p>
             <p className="w-1/4 text-center text-base font-semibold leading-5 text-grey">
               {persianNumber(offer.price)}

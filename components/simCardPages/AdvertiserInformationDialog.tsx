@@ -2,7 +2,10 @@
 
 import theme from "@/app/theme";
 import { StoreAdvertiser, UserAdvertiser } from "@/lib/entities/advertiser";
-import { persianNumber } from "@/lib/helpers/persianNumber.helper";
+import {
+  formatPhoneNumber,
+  persianNumber,
+} from "@/lib/helpers/persianNumber.helper";
 import {
   Dialog,
   DialogContent,
@@ -103,7 +106,7 @@ export default function AdvertiserInformationDialog({
                 {phoneNumbers.map((phone, index) => (
                   <Fragment key={index}>
                     {(index && <VerticalLineSmall />) || ""}
-                    <p>{persianNumber(phone)}</p>
+                    <p className="ltr">{formatPhoneNumber(phone)}</p>
                   </Fragment>
                 ))}
               </div>

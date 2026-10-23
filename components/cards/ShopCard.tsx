@@ -1,4 +1,7 @@
-import { persianNumber } from "@/lib/helpers/persianNumber.helper";
+import {
+  formatPhoneNumber,
+  persianNumber,
+} from "@/lib/helpers/persianNumber.helper";
 import Image from "next/image";
 import ResponsiveLink from "../general/ResponsiveLink";
 
@@ -41,8 +44,8 @@ export default function ShopCard({
       </div>
       <div className="flex w-full flex-row items-center justify-between text-xs font-normal text-grey">
         <p className="text-grey-500">شماره تماس</p>
-        <p className="font-bold text-grey">
-          {persianNumber(phoneNumbers?.[0] || "۰۲۱-۲۲۳۳۴۴۵۵")}
+        <p className="font-bold text-grey ltr">
+          {formatPhoneNumber(phoneNumbers?.[0] || "۰۲۱-۲۲۳۳۴۴۵۵")}
         </p>
       </div>
       <div className="flex w-full flex-row items-center justify-between pt-1">

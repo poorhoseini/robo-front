@@ -1,6 +1,9 @@
 "use client";
 
-import { persianNumber } from "@/lib/helpers/persianNumber.helper";
+import {
+  formatPhoneNumber,
+  persianNumber,
+} from "@/lib/helpers/persianNumber.helper";
 import {
   Dialog,
   DialogContent,
@@ -247,8 +250,8 @@ export default function PredictDetailsDialog({
               {predictDetail.simcards.bestMatch.map((item, index) => (
                 <Fragment key={index}>
                   <div className="flex w-1/3 flex-col items-center gap-3">
-                    <p className="text-base font-normal leading-5 text-grey">
-                      {persianNumber(item.phoneNumber)}
+                    <p className="text-base font-normal leading-5 text-grey ltr">
+                      {formatPhoneNumber(item.phoneNumber)}
                     </p>
                     <p>
                       <span className="text-base font-bold leading-5 text-grey">
@@ -274,8 +277,8 @@ export default function PredictDetailsDialog({
               {predictDetail.simcards.minSimcards.map((item, index) => (
                 <Fragment key={index}>
                   <div className="flex w-1/3 flex-col items-center gap-3">
-                    <p className="text-base font-normal leading-5 text-grey">
-                      {persianNumber(item.phoneNumber)}
+                    <p className="text-base font-normal leading-5 text-grey ltr">
+                      {formatPhoneNumber(item.phoneNumber)}
                     </p>
                     <p>
                       <span className="text-base font-bold leading-5 text-grey">
@@ -301,8 +304,8 @@ export default function PredictDetailsDialog({
               {predictDetail.simcards.midSimcards.map((item, index) => (
                 <Fragment key={index}>
                   <div className="flex w-1/3 flex-col items-center gap-3">
-                    <p className="text-base font-normal leading-5 text-grey">
-                      {persianNumber(item.phoneNumber)}
+                    <p className="text-base font-normal leading-5 text-grey ltr">
+                      {formatPhoneNumber(item.phoneNumber)}
                     </p>
                     <p>
                       <span className="text-base font-bold leading-5 text-grey">
@@ -328,8 +331,8 @@ export default function PredictDetailsDialog({
               {predictDetail.simcards.highSimcards.map((item, index) => (
                 <Fragment key={index}>
                   <div className="flex w-1/3 flex-col items-center gap-3">
-                    <p className="text-base font-normal leading-5 text-grey">
-                      {persianNumber(item.phoneNumber)}
+                    <p className="text-base font-normal leading-5 text-grey ltr">
+                      {formatPhoneNumber(item.phoneNumber)}
                     </p>
                     <p>
                       <span className="text-base font-bold leading-5 text-grey">

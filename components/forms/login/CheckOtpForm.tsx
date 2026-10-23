@@ -4,7 +4,10 @@ import CustomNumberTextField from "@/components/general/CustomNumberTextField";
 import PrivacyModal from "@/components/login/PrivacyModal";
 import TermsModal from "@/components/login/TermsModal";
 import { CheckOtpFormProps } from "@/lib/entities/auth";
-import { persianNumber } from "@/lib/helpers/persianNumber.helper";
+import {
+  formatPhoneNumber,
+  persianNumber,
+} from "@/lib/helpers/persianNumber.helper";
 import Image from "next/image";
 import React, { useEffect, useRef, useState } from "react";
 import { Controller, UseFormReturn } from "react-hook-form";
@@ -142,8 +145,8 @@ export default function CheckOtpForm({
           <div className="flex w-full flex-col items-start justify-start gap-4">
             <p className="text-lg font-medium">
               <span>کد تایید به شماره </span>
-              <span className="font-semibold">
-                {" " + persianNumber(phoneNumber) + " "}
+              <span className="font-semibold ltr inline-block">
+                {" " + formatPhoneNumber(phoneNumber) + " "}
               </span>
               <span>فرستاده شد.</span>
             </p>

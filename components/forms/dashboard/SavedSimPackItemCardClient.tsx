@@ -4,7 +4,10 @@ import {
   getSimCardStateLabel,
   getSimCardTypeLabel,
 } from "@/lib/helpers/decodeSimCardData";
-import { persianNumber } from "@/lib/helpers/persianNumber.helper";
+import {
+  formatPhoneNumber,
+  persianNumber,
+} from "@/lib/helpers/persianNumber.helper";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -49,7 +52,7 @@ export default function SavedSimPackItemCardClient({
                 key={index}
                 className="ltr flex text-[26px] font-semibold leading-7 text-white"
               >
-                {persianNumber(spell)}
+                {formatPhoneNumber(spell)}
               </h3>
             ))}
           </div>

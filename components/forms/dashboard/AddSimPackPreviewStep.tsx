@@ -16,7 +16,10 @@ import {
   getSimCardPriceTypeLabel,
   getSimPackTypeLabel,
 } from "@/lib/helpers/decodeSimCardData";
-import { persianNumber } from "@/lib/helpers/persianNumber.helper";
+import {
+  formatPhoneNumber,
+  persianNumber,
+} from "@/lib/helpers/persianNumber.helper";
 import { AuthContext } from "@/lib/providers/AuthProvider";
 import { CartDialogContext } from "@/lib/providers/CartDialogProvider";
 import { LoginDialogContext } from "@/lib/providers/LoginDialogProvider";
@@ -166,9 +169,9 @@ export default function AddSimPackPreviewStep({
           {savedItems.map((item, index) => (
             <p
               key={index}
-              className="text-[26px] font-semibold leading-5 text-[#F6F6F6]"
+              className="text-[26px] font-semibold leading-5 text-[#F6F6F6] ltr"
             >
-              {persianNumber(item.phoneNumber)}
+              {formatPhoneNumber(item.phoneNumber)}
             </p>
           ))}
         </div>

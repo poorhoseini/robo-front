@@ -2,7 +2,10 @@ import {
   getSimCardStateLabel,
   getSimCardTypeLabel,
 } from "@/lib/helpers/decodeSimCardData";
-import { persianNumber } from "@/lib/helpers/persianNumber.helper";
+import {
+  formatPhoneNumber,
+  persianNumber,
+} from "@/lib/helpers/persianNumber.helper";
 import Image from "next/image";
 
 export default function PredictCard({
@@ -38,7 +41,7 @@ export default function PredictCard({
         className={`flex w-full flex-col items-center gap-2 rounded-xl bg-grey-900 p-3`}
       >
         <h3 className="ltr flex text-[26px] font-semibold leading-7 text-white">
-          {persianNumber(title)}
+          {formatPhoneNumber(title)}
         </h3>
         <div className="flex w-full flex-row items-center justify-start gap-3 whitespace-nowrap text-xs font-normal text-white">
           <div className="flex flex-row items-center justify-center gap-1">

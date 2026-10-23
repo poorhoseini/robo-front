@@ -1,4 +1,7 @@
-import { persianNumber } from "@/lib/helpers/persianNumber.helper";
+import {
+  formatPhoneNumber,
+  persianNumber,
+} from "@/lib/helpers/persianNumber.helper";
 import {
   useAnalysisActions,
   useCode,
@@ -41,8 +44,8 @@ export default function RoundResultStep() {
 
   return (
     <div className="flex h-full w-full flex-col items-center">
-      <div className="flex w-full items-center justify-center rounded-xl bg-grey p-6 text-3xl font-medium leading-8 text-white">
-        {persianNumber(phoneNumber)}
+      <div className="flex w-full items-center justify-center rounded-xl bg-grey p-6 text-3xl font-medium leading-8 text-white ltr">
+        {formatPhoneNumber(phoneNumber)}
       </div>
       <Space value={32} />
       <div className="flex w-full flex-col items-center rounded-xl bg-white p-6">

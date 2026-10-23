@@ -1,6 +1,9 @@
 import { Operator } from "@/lib/entities/operator";
 import { getSimCardOperatorIconUrl } from "@/lib/helpers/decodeSimCardData";
-import { persianNumber } from "@/lib/helpers/persianNumber.helper";
+import {
+  formatPhoneNumber,
+  persianNumber,
+} from "@/lib/helpers/persianNumber.helper";
 import { getElapsetTime } from "@/lib/helpers/timeDifference";
 import Image from "next/image";
 import PriceBox from "./PriceBox";
@@ -169,7 +172,7 @@ export default function SimCardDetailCard({
                   />
                 )}
                 <p className="ltr text-3xl font-medium text-white md:text-[26px] md:font-semibold">
-                  {persianNumber(simCard.sellerSpel)}
+                  {formatPhoneNumber(simCard.sellerSpel)}
                 </p>
               </div>
             ))}
