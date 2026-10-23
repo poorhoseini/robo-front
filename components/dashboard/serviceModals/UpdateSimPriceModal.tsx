@@ -172,7 +172,6 @@ export default function UpdateSimPriceModal({
     const payload: ChangeSimPriceRequestProps = {
       refrence: normalizedRefrence,
       refrenceId: id,
-      refrenceIds: [id],
       newPriceType: Number(priceTypeRadioValue),
       newPrice: isNegotiableSelected ? 0 : numericPrice,
       socialReply: true,
@@ -190,7 +189,20 @@ export default function UpdateSimPriceModal({
     } catch (error) {
       console.log(error);
       if (error instanceof ResponseError) {
-        toast.error(error.printError());
+        let errorMsg = error.printError();
+        const errData = error.getErrorData();
+        if (errData && typeof errData === "object") {
+          const fieldErrors = Object.entries(errData)
+            .map(
+              ([field, val]) =>
+                `${field}: ${Array.isArray(val) ? val.join("، ") : val}`,
+            )
+            .join(" | ");
+          if (fieldErrors) {
+            errorMsg = `${errorMsg} (${fieldErrors})`;
+          }
+        }
+        toast.error(errorMsg);
         const errorReason = error.getErrorReason();
         if (errorReason === 163 || errorReason === 164) {
           resetAuth();
