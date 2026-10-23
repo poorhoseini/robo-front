@@ -28,26 +28,33 @@ export default function PricesFilterBox({
               <TextField
                 size="small"
                 id="minPrice"
-                label="مثلا ۷۰,۰۰۰"
+                label="قیمت"
                 value={value}
                 onChange={(e) => {
                   const lastCharacter = e.target.value.slice(-1);
                   if (!numberInputRegex.test(lastCharacter)) return;
 
                   const result = Number(
-                    englishNumber(e.target.value.replaceAll("٬", "")),
+                    englishNumber(
+                      e.target.value.replaceAll("٬", "").replaceAll(",", ""),
+                    ),
                   ).toLocaleString("fa-ir");
 
                   onChange(result === "۰" ? "" : result);
                 }}
                 sx={{
                   width: 226,
-                  "& .MuiFormLabel-root": { color: "#8c8c8c" },
                 }}
                 variant="outlined"
+                inputProps={{ inputMode: "numeric" }}
                 InputProps={{
                   endAdornment: (
-                    <InputAdornment position="end">تومان</InputAdornment>
+                    <InputAdornment
+                      position="end"
+                      sx={{ "& p": { fontSize: 12, fontWeight: 500 } }}
+                    >
+                      تومان
+                    </InputAdornment>
                   ),
                 }}
               />
@@ -60,26 +67,33 @@ export default function PricesFilterBox({
               <TextField
                 size="small"
                 id="maxPrice"
-                label="مثلا ۷۰,۰۰۰"
+                label="قیمت"
                 value={value}
                 onChange={(e) => {
                   const lastCharacter = e.target.value.slice(-1);
                   if (!numberInputRegex.test(lastCharacter)) return;
 
                   const result = Number(
-                    englishNumber(e.target.value.replaceAll("٬", "")),
+                    englishNumber(
+                      e.target.value.replaceAll("٬", "").replaceAll(",", ""),
+                    ),
                   ).toLocaleString("fa-ir");
 
                   onChange(result === "۰" ? "" : result);
                 }}
                 sx={{
                   width: 226,
-                  "& .MuiFormLabel-root": { color: "#8c8c8c" },
                 }}
                 variant="outlined"
+                inputProps={{ inputMode: "numeric" }}
                 InputProps={{
                   endAdornment: (
-                    <InputAdornment position="end">تومان</InputAdornment>
+                    <InputAdornment
+                      position="end"
+                      sx={{ "& p": { fontSize: 12, fontWeight: 500 } }}
+                    >
+                      تومان
+                    </InputAdornment>
                   ),
                 }}
               />

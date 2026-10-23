@@ -25,7 +25,8 @@ import {
 } from "@/lib/zustand/groupOperation";
 import { SingleSimCard } from "@/lib/entities/singleSimCard";
 import SavedItemCardClient from "@/components/forms/dashboard/SavedItemCardClient";
-import { persianNumber } from "@/lib/helpers/persianNumber.helper";
+import { englishNumber, persianNumber } from "@/lib/helpers/persianNumber.helper";
+import { numberInputRegex } from "@/lib/helpers/regex";
 import { ResponseError } from "@/lib/api/error";
 import { toast } from "react-toastify";
 import { LoginDialogContext } from "@/lib/providers/LoginDialogProvider";
@@ -69,7 +70,13 @@ export default function UpdateSimPriceModal({
       refrence: serviceType,
       refrenceId: selectedItems.map((item) => item._id)[0],
       newPriceType: Number(priceTypeRadioValue),
-      newPrice: priceInputValue ? Number(priceInputValue) : 1,
+      newPrice: priceInputValue
+        ? Number(
+            englishNumber(
+              priceInputValue.replaceAll("٬", "").replaceAll(",", ""),
+            ),
+          )
+        : 1,
       socialReply: true,
     };
 
@@ -238,9 +245,23 @@ export default function UpdateSimPriceModal({
                     قیمت جدید را وارد کنید:
                   </p>
                   <TextField
+                    id="price"
                     label="قیمت"
                     value={priceInputValue}
-                    onChange={(e) => setPriceInputValue(e.target.value)}
+                    onChange={(e) => {
+                      const lastCharacter = e.target.value.slice(-1);
+                      if (!numberInputRegex.test(lastCharacter)) return;
+
+                      const result = Number(
+                        englishNumber(
+                          e.target.value
+                            .replaceAll("٬", "")
+                            .replaceAll(",", ""),
+                        ),
+                      ).toLocaleString("fa-ir");
+
+                      setPriceInputValue(result === "۰" ? "" : result);
+                    }}
                     sx={{
                       width: "100%",
                       height: "56px",
@@ -250,6 +271,7 @@ export default function UpdateSimPriceModal({
                       },
                     }}
                     variant="outlined"
+                    inputProps={{ inputMode: "numeric" }}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment

@@ -69,14 +69,18 @@ export default function AddSimKhastPriceStep({
   } = useForm<AddSimKhastPriceFormProps>({
     defaultValues: {
       minPrice: minPrice
-        ? Number(englishNumber(minPrice.replaceAll("٬", ""))).toLocaleString(
-            "fa-ir",
-          )
+        ? Number(
+            englishNumber(
+              minPrice.replaceAll("٬", "").replaceAll(",", ""),
+            ),
+          ).toLocaleString("fa-ir")
         : "",
       maxPrice: maxPrice
-        ? Number(englishNumber(maxPrice.replaceAll("٬", ""))).toLocaleString(
-            "fa-ir",
-          )
+        ? Number(
+            englishNumber(
+              maxPrice.replaceAll("٬", "").replaceAll(",", ""),
+            ),
+          ).toLocaleString("fa-ir")
         : "",
       province: province?.id.toString(),
       city: city?.id.toString(),
@@ -85,8 +89,12 @@ export default function AddSimKhastPriceStep({
   });
 
   const handleSubmitPrice = (values: AddSimKhastPriceFormProps) => {
-    setMinPrice(englishNumber(minPrice.replaceAll("٬", "")));
-    setMaxPrice(englishNumber(maxPrice.replaceAll("٬", "")));
+    setMinPrice(
+      englishNumber(minPrice.replaceAll("٬", "").replaceAll(",", "")),
+    );
+    setMaxPrice(
+      englishNumber(maxPrice.replaceAll("٬", "").replaceAll(",", "")),
+    );
     setStep(3);
   };
 
@@ -118,7 +126,9 @@ export default function AddSimKhastPriceStep({
                   if (!numberInputRegex.test(lastCharacter)) return;
 
                   const result = Number(
-                    englishNumber(e.target.value.replaceAll("٬", "")),
+                    englishNumber(
+                      e.target.value.replaceAll("٬", "").replaceAll(",", ""),
+                    ),
                   ).toLocaleString("fa-ir");
 
                   onChange(result === "۰" ? "" : result);
@@ -158,7 +168,9 @@ export default function AddSimKhastPriceStep({
                   if (!numberInputRegex.test(lastCharacter)) return;
 
                   const result = Number(
-                    englishNumber(e.target.value.replaceAll("٬", "")),
+                    englishNumber(
+                      e.target.value.replaceAll("٬", "").replaceAll(",", ""),
+                    ),
                   ).toLocaleString("fa-ir");
 
                   onChange(result === "۰" ? "" : result);

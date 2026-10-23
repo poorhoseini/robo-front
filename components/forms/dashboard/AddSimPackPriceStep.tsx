@@ -102,9 +102,9 @@ export default function AddSimPackPriceStep({
       simPackType: simPackType || "",
       priceType: priceType,
       price: price
-        ? Number(englishNumber(price.replaceAll("٬", ""))).toLocaleString(
-            "fa-ir",
-          )
+        ? Number(
+            englishNumber(price.replaceAll("٬", "").replaceAll(",", "")),
+          ).toLocaleString("fa-ir")
         : "",
       hasInstallmentPlan: hasInstallmentPlan,
       loanId: loanId,
@@ -132,7 +132,7 @@ export default function AddSimPackPriceStep({
     setPriceType(values.priceType);
     setPrice(
       isHighestBid || values.priceType === "0"
-        ? englishNumber(values.price.replaceAll("٬", ""))
+        ? englishNumber(values.price.replaceAll("٬", "").replaceAll(",", ""))
         : "",
     );
     setHasInstallmentPlan(values.hasInstallmentPlan);
@@ -306,7 +306,11 @@ export default function AddSimPackPriceStep({
                       if (!numberInputRegex.test(lastCharacter)) return;
 
                       const result = Number(
-                        englishNumber(e.target.value.replaceAll("٬", "")),
+                        englishNumber(
+                          e.target.value
+                            .replaceAll("٬", "")
+                            .replaceAll(",", ""),
+                        ),
                       ).toLocaleString("fa-ir");
 
                       onChange(result === "۰" ? "" : result);

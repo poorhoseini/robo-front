@@ -113,7 +113,9 @@ export default function BidOnSimKhastForm({
         formData.digit9,
       type: Number(formData.type),
       state: Number(formData.status),
-      price: Number(englishNumber(formData.price.replaceAll("٬", ""))),
+      price: Number(
+        englishNumber(formData.price.replaceAll("٬", "").replaceAll(",", "")),
+      ),
       provinceId: 8,
       cityId: 301,
     };
@@ -649,14 +651,16 @@ export default function BidOnSimKhastForm({
               render={({ field: { onChange, onBlur, value, ref } }) => (
                 <TextField
                   id="price"
-                  label="مثلا ۷۰,۰۰۰,۰۰۰"
+                  label="قیمت"
                   value={value}
                   onChange={(e) => {
                     const lastCharacter = e.target.value.slice(-1);
                     if (!numberInputRegex.test(lastCharacter)) return;
 
                     const result = Number(
-                      englishNumber(e.target.value.replaceAll("٬", "")),
+                      englishNumber(
+                        e.target.value.replaceAll("٬", "").replaceAll(",", ""),
+                      ),
                     ).toLocaleString("fa-ir");
 
                     onChange(result === "۰" ? "" : result);
@@ -667,13 +671,6 @@ export default function BidOnSimKhastForm({
                     height: "56px",
                     "& .MuiInputBase-root": {
                       height: "56px",
-                    },
-                    "& label": {
-                      top: "3px !important",
-                      fontSize: 12,
-                    },
-                    "& legend": {
-                      fontSize: 9,
                     },
                   }}
                   variant="outlined"

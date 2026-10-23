@@ -160,12 +160,16 @@ export default function FilterNumber({
     if (values.minimumPrice)
       params.append(
         "minPrice",
-        englishNumber(values.minimumPrice.replaceAll("٬", "")),
+        englishNumber(
+          values.minimumPrice.replaceAll("٬", "").replaceAll(",", ""),
+        ),
       );
     if (values.maximumPrice)
       params.append(
         "maxPrice",
-        englishNumber(values.maximumPrice.replaceAll("٬", "")),
+        englishNumber(
+          values.maximumPrice.replaceAll("٬", "").replaceAll(",", ""),
+        ),
       );
 
     router.push(`/search?${params.toString()}`);
@@ -322,7 +326,9 @@ export default function FilterNumber({
                 if (!numberInputRegex.test(lastCharacter)) return;
 
                 const result = Number(
-                  englishNumber(e.target.value.replaceAll("٬", "")),
+                  englishNumber(
+                    e.target.value.replaceAll("٬", "").replaceAll(",", ""),
+                  ),
                 ).toLocaleString("fa-ir");
 
                 onChange(result === "۰" ? "" : result);
@@ -335,9 +341,15 @@ export default function FilterNumber({
                 },
               }}
               variant="outlined"
+              inputProps={{ inputMode: "numeric" }}
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position="end">تومان</InputAdornment>
+                  <InputAdornment
+                    position="end"
+                    sx={{ "& p": { fontSize: 12, fontWeight: 500 } }}
+                  >
+                    تومان
+                  </InputAdornment>
                 ),
               }}
             />
@@ -386,7 +398,9 @@ export default function FilterNumber({
                 if (!numberInputRegex.test(lastCharacter)) return;
 
                 const result = Number(
-                  englishNumber(e.target.value.replaceAll("٬", "")),
+                  englishNumber(
+                    e.target.value.replaceAll("٬", "").replaceAll(",", ""),
+                  ),
                 ).toLocaleString("fa-ir");
 
                 onChange(result === "۰" ? "" : result);
@@ -399,9 +413,15 @@ export default function FilterNumber({
                 },
               }}
               variant="outlined"
+              inputProps={{ inputMode: "numeric" }}
               InputProps={{
                 endAdornment: (
-                  <InputAdornment position="end">تومان</InputAdornment>
+                  <InputAdornment
+                    position="end"
+                    sx={{ "& p": { fontSize: 12, fontWeight: 500 } }}
+                  >
+                    تومان
+                  </InputAdornment>
                 ),
               }}
             />

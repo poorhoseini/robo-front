@@ -197,7 +197,9 @@ export default function FiltersForm({
                 ? "state"
                 : key,
             key === "minPrice" || key === "maxPrice"
-              ? englishNumber(value.replaceAll("٬", ""))
+              ? englishNumber(
+                  value.replaceAll("٬", "").replaceAll(",", ""),
+                )
               : value,
           )
         : params.delete(

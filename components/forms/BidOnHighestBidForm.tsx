@@ -61,7 +61,9 @@ export default function BidOnHighestBidForm({
 
     const payload: OfferHighestBidRequestProps = {
       highBidId: highestBidId,
-      bidPrice: Number(englishNumber(formData.price.replaceAll("٬", ""))),
+      bidPrice: Number(
+        englishNumber(formData.price.replaceAll("٬", "").replaceAll(",", "")),
+      ),
     };
 
     try {
@@ -116,13 +118,19 @@ export default function BidOnHighestBidForm({
                 validate: {
                   range: (value) => {
                     if (
-                      Number(englishNumber(value.replaceAll("٬", ""))) <
-                      minimumAcceptableOffer
+                      Number(
+                        englishNumber(
+                          value.replaceAll("٬", "").replaceAll(",", ""),
+                        ),
+                      ) < minimumAcceptableOffer
                     )
                       return `از ${persianNumber(minimumAcceptableOffer)}`;
                     if (
-                      Number(englishNumber(value.replaceAll("٬", ""))) >
-                      maximumAcceptableOffer
+                      Number(
+                        englishNumber(
+                          value.replaceAll("٬", "").replaceAll(",", ""),
+                        ),
+                      ) > maximumAcceptableOffer
                     )
                       return `حداکثر ${persianNumber(maximumAcceptableOffer)}`;
                   },
@@ -135,16 +143,18 @@ export default function BidOnHighestBidForm({
                 <TextField
                   id="price"
                   label={
-                    errors.price?.message ||
-                    `از ${persianNumber(minimumAcceptableOffer)}`
+                    errors.price?.message || "قیمت"
                   }
+                  placeholder={`از ${persianNumber(minimumAcceptableOffer)}`}
                   value={value}
                   onChange={(e) => {
                     const lastCharacter = e.target.value.slice(-1);
                     if (!numberInputRegex.test(lastCharacter)) return;
 
                     const result = Number(
-                      englishNumber(e.target.value.replaceAll("٬", "")),
+                      englishNumber(
+                        e.target.value.replaceAll("٬", "").replaceAll(",", ""),
+                      ),
                     ).toLocaleString("fa-ir");
 
                     onChange(result === "۰" ? "" : result);
@@ -155,13 +165,6 @@ export default function BidOnHighestBidForm({
                     height: "56px",
                     "& .MuiInputBase-root": {
                       height: "56px",
-                    },
-                    "& label": {
-                      top: "3px !important",
-                      fontSize: 12,
-                    },
-                    "& legend": {
-                      fontSize: 9,
                     },
                   }}
                   variant="outlined"
