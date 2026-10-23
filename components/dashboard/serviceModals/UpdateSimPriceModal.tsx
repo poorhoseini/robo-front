@@ -39,6 +39,9 @@ import {
 import changeSimPrice from "@/lib/api/changeSimPrice";
 import { SimKhast } from "@/lib/entities/simKhast";
 import { SimPack } from "@/lib/entities/simPack";
+import { ServiceType } from "@/lib/entities/landingPage";
+
+import removeSimDiscount from "@/lib/api/removeSimDiscount";
 
 export default function UpdateSimPriceModal({
   open,
@@ -61,10 +64,32 @@ export default function UpdateSimPriceModal({
   const [priceTypeRadioValue, setPriceTypeRadioValue] = useState<"0" | "1">();
   const [priceInputValue, setPriceInputValue] = useState<string>("");
 
+  const cleanNumber = (val: string | number) => {
+    const digits = englishNumber(String(val)).replace(/\D/g, "");
+    return digits ? Number(digits) : 0;
+  };
+
   const hasSingleItem = selectedItems.length === 1;
   const currentItem = selectedItems[0] as SingleSimCard | SimPack | undefined;
   const isNegotiable =
     hasSingleItem && currentItem?.priceType === 1;
+
+  const hasExistingDiscount = Boolean(
+    hasSingleItem &&
+      ((currentItem?.offPercent !== undefined &&
+        currentItem?.offPercent !== null &&
+        currentItem.offPercent > 0) ||
+        currentItem?.priceType === 3),
+  );
+  const existingOffPercent = currentItem?.offPercent;
+  const existingOffPrice = currentItem?.offPrice;
+
+  const normalizedRefrence: ServiceType =
+    serviceType === "simcardHighBid"
+      ? "simcard"
+      : serviceType === "simPackHighBid"
+        ? "simPack"
+        : serviceType;
 
   const currentPriceText = isNegotiable
     ? "توافقی"
@@ -101,22 +126,55 @@ export default function UpdateSimPriceModal({
     }
   }, [open, selectedItems]);
 
+  async function handleRemoveExistingDiscount() {
+    const id = selectedItems.map((item) => item._id)[0];
+    if (!id) return;
+    setLoading(true);
+    try {
+      await removeSimDiscount(auth.token, {
+        refrence: normalizedRefrence,
+        refrenceIds: [id],
+      });
+      toast.success("تخفیف سیم کارت با موفقیت حذف شد");
+      router.refresh();
+      handleClose();
+    } catch (err) {
+      console.error(err);
+      if (err instanceof ResponseError) {
+        toast.error(err.printError());
+      } else {
+        toast.error("خطا در حذف تخفیف سیم کارت");
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
+
   async function handleSubmitPreDiscount() {
     if (!priceTypeRadioValue) return;
+
+    const id = selectedItems.map((item) => item._id)[0];
+    if (!id) {
+      toast.error("سیم کارتی انتخاب نشده است");
+      return;
+    }
+
+    const isNegotiableSelected = priceTypeRadioValue === "1";
+    const numericPrice = cleanNumber(priceInputValue);
+
+    if (!isNegotiableSelected && numericPrice <= 0) {
+      toast.warning("لطفاً قیمت جدید سیم کارت را وارد کنید");
+      return;
+    }
 
     setLoading(true);
 
     const payload: ChangeSimPriceRequestProps = {
-      refrence: serviceType,
-      refrenceId: selectedItems.map((item) => item._id)[0],
+      refrence: normalizedRefrence,
+      refrenceId: id,
+      refrenceIds: [id],
       newPriceType: Number(priceTypeRadioValue),
-      newPrice: priceInputValue
-        ? Number(
-            englishNumber(
-              priceInputValue.replaceAll("٬", "").replaceAll(",", ""),
-            ),
-          )
-        : 1,
+      newPrice: isNegotiableSelected ? 0 : numericPrice,
       socialReply: true,
     };
 
@@ -125,6 +183,7 @@ export default function UpdateSimPriceModal({
         auth.token,
         payload,
       );
+      toast.success("قیمت سیم کارت با موفقیت تغییر کرد");
       flushItems();
       handleClose();
       router.refresh();
@@ -272,13 +331,43 @@ export default function UpdateSimPriceModal({
                 <p className="text-sm font-normal leading-5 text-grey md:text-base">{`${persianNumber(selectedItems.length)} عدد`}</p>
               </div>
               <HorizontalLine />
-              <div className="flex w-full flex-row items-center justify-between">
-                <p className="text-sm font-normal leading-5 text-grey md:text-base">
-                  {hasSingleItem ? "قیمت سیم کارت" : "مجموع قیمت سیم کارت‌ها"}
-                </p>
-                <p className="text-sm font-medium text-grey md:text-base">
-                  {currentPriceText}
-                </p>
+              <div className="flex w-full flex-col gap-2">
+                <div className="flex w-full flex-row items-center justify-between">
+                  <p className="text-sm font-normal leading-5 text-grey md:text-base">
+                    {hasSingleItem ? "قیمت سیم کارت" : "مجموع قیمت سیم کارت‌ها"}
+                  </p>
+                  <p className="text-sm font-medium text-grey md:text-base">
+                    {currentPriceText}
+                  </p>
+                </div>
+                {hasExistingDiscount && (
+                  <div className="mt-2 flex w-full flex-col gap-2 rounded-xl border border-amber-200 bg-amber-50/80 p-3 text-xs leading-5 text-amber-900">
+                    <div className="flex w-full items-center justify-between">
+                      <span className="font-bold">
+                        تخفیف فعال: {persianNumber(existingOffPercent || 0)}٪
+                      </span>
+                      {existingOffPrice && (
+                        <span className="font-semibold text-amber-800">
+                          قیمت فعلی با تخفیف: {persianNumber(existingOffPrice)} تومان
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-amber-800/90">
+                      این سیم کارت دارای تخفیف فعال است. در صورت نیاز می‌توانید ابتدا تخفیف را حذف کنید.
+                    </p>
+                    <div className="flex justify-end pt-1">
+                      <button
+                        type="button"
+                        disabled={loading}
+                        onClick={handleRemoveExistingDiscount}
+                        className="flex items-center gap-1 rounded bg-amber-600 px-3 py-1 font-medium text-white hover:bg-amber-700 disabled:opacity-50"
+                      >
+                        <Image src="/icons/garbage-red.svg" alt="" width={14} height={14} className="brightness-0 invert" />
+                        حذف تخفیف فعلی
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
               <HorizontalLine />
               <p className="shrink-0 text-sm font-normal leading-5 text-grey md:text-base">
@@ -303,18 +392,13 @@ export default function UpdateSimPriceModal({
                     label="قیمت"
                     value={priceInputValue}
                     onChange={(e) => {
-                      const lastCharacter = e.target.value.slice(-1);
-                      if (!numberInputRegex.test(lastCharacter)) return;
-
-                      const result = Number(
-                        englishNumber(
-                          e.target.value
-                            .replaceAll("٬", "")
-                            .replaceAll(",", ""),
-                        ),
-                      ).toLocaleString("fa-ir");
-
-                      setPriceInputValue(result === "۰" ? "" : result);
+                      const rawDigits = englishNumber(e.target.value).replace(/\D/g, "");
+                      if (!rawDigits) {
+                        setPriceInputValue("");
+                        return;
+                      }
+                      const num = Number(rawDigits);
+                      setPriceInputValue(num.toLocaleString("fa-ir"));
                     }}
                     sx={{
                       width: "100%",
@@ -344,8 +428,12 @@ export default function UpdateSimPriceModal({
               <div className="hidden w-full md:flex">
                 <button
                   type="button"
-                  disabled={loading || !priceTypeRadioValue}
-                  className="flex w-full items-center justify-center rounded-md bg-grey p-4 text-[17px] font-bold text-white"
+                  disabled={
+                    loading ||
+                    !priceTypeRadioValue ||
+                    (priceTypeRadioValue === "0" && cleanNumber(priceInputValue) <= 0)
+                  }
+                  className="flex w-full items-center justify-center rounded-md bg-grey p-4 text-[17px] font-bold text-white disabled:opacity-50"
                   onClick={handleSubmitPreDiscount}
                 >
                   {loading ? <Spinner /> : "تایید"}
@@ -358,8 +446,12 @@ export default function UpdateSimPriceModal({
       <div className="fixed bottom-0 z-10 flex h-20 w-full items-center justify-center gap-4 border-t border-grey-200 bg-white p-4 md:hidden">
         <button
           type="button"
-          disabled={loading || !priceTypeRadioValue}
-          className="flex w-full items-center justify-center rounded-md bg-grey p-3 text-[17px] font-bold text-white"
+          disabled={
+            loading ||
+            !priceTypeRadioValue ||
+            (priceTypeRadioValue === "0" && cleanNumber(priceInputValue) <= 0)
+          }
+          className="flex w-full items-center justify-center rounded-md bg-grey p-3 text-[17px] font-bold text-white disabled:opacity-50"
           onClick={handleSubmitPreDiscount}
         >
           {loading ? <Spinner /> : "تایید"}

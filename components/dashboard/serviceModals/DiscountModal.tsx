@@ -39,6 +39,10 @@ import { LoginDialogContext } from "@/lib/providers/LoginDialogProvider";
 import Spinner from "@/components/general/Spinner";
 import { SimPack } from "@/lib/entities/simPack";
 import { SimKhast } from "@/lib/entities/simKhast";
+import { ServiceType } from "@/lib/entities/landingPage";
+
+import { useRouter } from "next/navigation";
+import removeSimDiscount from "@/lib/api/removeSimDiscount";
 
 export default function DiscountModal({
   open,
@@ -47,6 +51,7 @@ export default function DiscountModal({
   open: boolean;
   handleClose: () => void;
 }) {
+  const router = useRouter();
   const { resetAuth } = useContext(AuthContext);
   const { setLoginDialogOpen } = useContext(LoginDialogContext);
   const selectedItems = useSelectedItems();
@@ -77,6 +82,16 @@ export default function DiscountModal({
   const isNegotiable =
     hasSingleItem && currentItem?.priceType === 1;
 
+  const hasExistingDiscount = Boolean(
+    hasSingleItem &&
+      ((currentItem?.offPercent !== undefined &&
+        currentItem?.offPercent !== null &&
+        currentItem.offPercent > 0) ||
+        currentItem?.priceType === 3),
+  );
+  const existingOffPercent = currentItem?.offPercent || 0;
+  const existingOffPrice = currentItem?.offPrice;
+
   const currentPrice = hasSingleItem
     ? currentItem?.price || 0
     : selectedItems.reduce(
@@ -91,6 +106,13 @@ export default function DiscountModal({
       ? `${persianNumber(currentPrice)} تومان`
       : "نامشخص";
 
+  const normalizedRefrence: ServiceType =
+    serviceType === "simcardHighBid"
+      ? "simcard"
+      : serviceType === "simPackHighBid"
+        ? "simPack"
+        : serviceType;
+
   const watchOffPercent = watch("offPercent");
   const offPercentNum = Number(englishNumber(watchOffPercent || ""));
   const hasValidDiscount =
@@ -104,16 +126,46 @@ export default function DiscountModal({
     : undefined;
 
   useEffect(() => {
-    if (!open) {
+    if (open) {
+      if (hasExistingDiscount && existingOffPercent > 0) {
+        reset({ offPercent: String(existingOffPercent) });
+      } else {
+        reset({ offPercent: "" });
+      }
+    } else {
       reset({ offPercent: "" });
     }
-  }, [open, reset]);
+  }, [open, hasExistingDiscount, existingOffPercent, reset]);
+
+  async function handleRemoveDiscount() {
+    const id = selectedItems.map((item) => item._id)[0];
+    if (!id) return;
+    setLoading(true);
+    try {
+      await removeSimDiscount(auth.token, {
+        refrence: normalizedRefrence,
+        refrenceIds: [id],
+      });
+      toast.success("تخفیف سیم کارت با موفقیت حذف شد");
+      router.refresh();
+      handleClose();
+    } catch (err) {
+      console.error(err);
+      if (err instanceof ResponseError) {
+        toast.error(err.printError());
+      } else {
+        toast.error("خطا در حذف تخفیف سیم کارت");
+      }
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function handleSubmitPreDiscount(vals: PreSetDiscountFormProps) {
     setLoading(true);
 
     const payload: PreSetDiscountRequestProps = {
-      refrence: serviceType,
+      refrence: normalizedRefrence,
       offPercent: Number(englishNumber(vals.offPercent)),
       refrenceIds: selectedItems.map((item) => item._id),
       socialReply: true,
@@ -274,18 +326,58 @@ export default function DiscountModal({
                     <p className="text-sm font-normal leading-5 text-grey md:text-base">{`${persianNumber(selectedItems.length)} عدد`}</p>
                   </div>
                   <HorizontalLine />
-                  <div className="flex w-full flex-row items-center justify-between">
-                    <p className="text-sm font-normal leading-5 text-grey md:text-base">
-                      {hasSingleItem ? "قیمت سیم کارت" : "مجموع قیمت سیم کارت‌ها"}
-                    </p>
-                    <p className="text-sm font-medium text-grey md:text-base">
-                      {currentPriceText}
-                    </p>
+                  <div className="flex w-full flex-col gap-2">
+                    <div className="flex w-full flex-row items-center justify-between">
+                      <p className="text-sm font-normal leading-5 text-grey md:text-base">
+                        {hasExistingDiscount
+                          ? "قیمت اولیه سیم کارت"
+                          : hasSingleItem
+                            ? "قیمت سیم کارت"
+                            : "مجموع قیمت سیم کارت‌ها"}
+                      </p>
+                      <p
+                        className={`text-sm font-medium md:text-base ${
+                          hasExistingDiscount ? "text-grey-400 line-through" : "text-grey"
+                        }`}
+                      >
+                        {currentPriceText}
+                      </p>
+                    </div>
+                    {hasExistingDiscount && (
+                      <div className="mt-2 flex w-full flex-col gap-2 rounded-xl border border-blue-200 bg-blue-50/80 p-3 text-xs leading-5">
+                        <div className="flex w-full items-center justify-between">
+                          <span className="font-bold text-blue-950">
+                            تخفیف فعال: {persianNumber(existingOffPercent)}٪
+                          </span>
+                          {existingOffPrice && (
+                            <span className="font-semibold text-blue-900">
+                              قیمت با تخفیف فعلی: {persianNumber(existingOffPrice)} تومان
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-center justify-between pt-1">
+                          <span className="text-[11px] text-grey-600">
+                            برای تغییر درصد تخفیف، مقدار جدید را وارد کنید:
+                          </span>
+                          <button
+                            type="button"
+                            disabled={loading}
+                            onClick={handleRemoveDiscount}
+                            className="flex items-center gap-1 rounded bg-white px-2 py-1 text-xs font-medium text-red-600 shadow-sm hover:bg-red-50 disabled:opacity-50"
+                          >
+                            <Image src="/icons/garbage-red.svg" alt="" width={14} height={14} />
+                            حذف تخفیف فعلی
+                          </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                   <HorizontalLine />
                   <div className="item-start flex w-full flex-col justify-between gap-2 md:flex-row md:items-center">
                     <p className="shrink-0 text-sm font-normal leading-5 text-grey md:text-base">
-                      درصد تخفیف را وارد کنید
+                      {hasExistingDiscount
+                        ? "درصد تخفیف جدید را وارد کنید:"
+                        : "درصد تخفیف را وارد کنید:"}
                     </p>
                     <div className="h-12 w-full md:h-14">
                       <Controller
@@ -297,14 +389,21 @@ export default function DiscountModal({
                         }) => (
                           <TextField
                             id="pre-number-select"
-                            label="درصد تخفیف بین ۱ تا ۴۹"
+                            label={
+                              hasExistingDiscount
+                                ? `درصد جدید (فعلی: ${persianNumber(existingOffPercent)}٪)`
+                                : "درصد تخفیف بین ۱ تا ۴۹"
+                            }
                             value={value}
                             onChange={(e) => {
                               const val = e.target.value;
-                              const lastChar = val.slice(-1);
-                              if (val && !numberInputRegex.test(lastChar)) return;
-                              const engVal = Number(englishNumber(val));
-                              if (val && (isNaN(engVal) || engVal > 49)) return;
+                              const rawDigits = englishNumber(val).replace(/\D/g, "");
+                              if (!rawDigits) {
+                                onChange("");
+                                return;
+                              }
+                              const engVal = Number(rawDigits);
+                              if (engVal > 49) return;
                               onChange(val);
                             }}
                             onBlur={onBlur}
@@ -341,9 +440,20 @@ export default function DiscountModal({
                     <>
                       <HorizontalLine />
                       <div className="flex w-full flex-row items-center justify-between">
-                        <p className="text-sm font-normal leading-5 text-grey md:text-base">
-                          {hasSingleItem ? "قیمت پس از تخفیف" : "مجموع قیمت پس از تخفیف"}
-                        </p>
+                        <div className="flex flex-col">
+                          <p className="text-sm font-normal leading-5 text-grey md:text-base">
+                            {hasExistingDiscount
+                              ? "قیمت جدید پس از تخفیف"
+                              : hasSingleItem
+                                ? "قیمت پس از تخفیف"
+                                : "مجموع قیمت پس از تخفیف"}
+                          </p>
+                          {hasExistingDiscount && offPercentNum !== existingOffPercent && (
+                            <p className="text-xs text-grey-500">
+                              (محاسبه بر روی قیمت اولیه {persianNumber(currentPrice)} تومان با {persianNumber(offPercentNum)}٪ تخفیف)
+                            </p>
+                          )}
+                        </div>
                         <p className="text-base font-bold text-primary md:text-lg">
                           {`${persianNumber(discountedPrice)} تومان`}
                         </p>
@@ -352,11 +462,17 @@ export default function DiscountModal({
                   )}
                   <div className="hidden w-full md:flex">
                     <button
-                      disabled={loading}
+                      disabled={loading || !hasValidDiscount}
                       type="submit"
-                      className="flex w-full items-center justify-center rounded-md bg-grey p-4 text-[17px] font-bold text-white"
+                      className="flex w-full items-center justify-center rounded-md bg-grey p-4 text-[17px] font-bold text-white disabled:opacity-50"
                     >
-                      {loading ? <Spinner /> : "تایید"}
+                      {loading ? (
+                        <Spinner />
+                      ) : hasExistingDiscount ? (
+                        "بروزرسانی تخفیف"
+                      ) : (
+                        "تایید"
+                      )}
                     </button>
                   </div>
                 </div>
@@ -365,11 +481,17 @@ export default function DiscountModal({
           </DialogContent>
           <div className="fixed bottom-0 z-10 flex h-20 w-full items-center justify-center gap-4 border-t border-grey-200 bg-white p-4 md:hidden">
             <button
-              disabled={loading}
+              disabled={loading || !hasValidDiscount}
               type="submit"
-              className="flex w-full items-center justify-center rounded-md bg-grey p-3 text-[17px] font-bold leading-6 text-white"
+              className="flex w-full items-center justify-center rounded-md bg-grey p-3 text-[17px] font-bold leading-6 text-white disabled:opacity-50"
             >
-              {loading ? <Spinner /> : "تایید"}
+              {loading ? (
+                <Spinner />
+              ) : hasExistingDiscount ? (
+                "بروزرسانی تخفیف"
+              ) : (
+                "تایید"
+              )}
             </button>
           </div>
         </form>

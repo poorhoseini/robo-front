@@ -9,6 +9,7 @@ export interface ChangeSimPriceResponseProps extends ResponseProps {
 
 export type ChangeSimPriceRequestProps = {
   refrenceId: string;
+  refrenceIds?: string[];
   refrence: ServiceType;
   newPrice: number;
   newPriceType: number;

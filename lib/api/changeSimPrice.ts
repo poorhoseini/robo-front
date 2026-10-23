@@ -24,11 +24,21 @@ export default async function changeSimPrice(
   );
 
   if (!res.ok) {
-    const errorResponse = await res.json();
+    let errorResponse: any = {};
+    try {
+      errorResponse = await res.json();
+    } catch {
+      // response body was empty or not JSON
+    }
+    const message =
+      errorResponse?.message ||
+      (res.status === 510
+        ? "تغییر قیمت برای این سیم کارت امکان‌پذیر نیست. در صورت داشتن تخفیف فعال، ابتدا تخفیف را حذف کنید."
+        : "در تغییر قیمت سیمکارت خطایی رخ داده است");
     throw new ResponseError(
-      errorResponse.message || "در تغییر قیمت سیمکارت خطایی رخ داده است",
-      errorResponse.data,
-      errorResponse.reason,
+      message,
+      errorResponse?.data,
+      errorResponse?.reason || res.status,
     );
   }
 
