@@ -188,6 +188,8 @@ export default function CartModal({
   };
 
   const handleCartClose = (isSuccessful: boolean = false) => {
+    setInnerStep(1);
+    setStep(1);
     if (isSubscripitonCart) {
       setSubscriptionCartDialogOpen(false);
       onCloseSubscriptionCart && onCloseSubscriptionCart();
@@ -201,6 +203,18 @@ export default function CartModal({
       }
       setCartDialogOpen(false);
     }
+  };
+
+  const handleStepBack = () => {
+    if (fullScreen && innerStep === 2) {
+      setInnerStep(1);
+      return;
+    }
+    if (step === 2 && !cart?.amount) {
+      setStep(1);
+      return;
+    }
+    handleCartClose();
   };
 
   const handleSubscriptionCartClose = () => {
@@ -240,26 +254,29 @@ export default function CartModal({
           onTouchEnd={() => setDraggable(false)}
           className="flex flex-row items-center justify-between px-8 pt-6"
         >
-          {step === 2 && innerStep === 2 && (
-            <IconButton onClick={() => setInnerStep(1)}>
-              <Image
-                src="/icons/icon-chevron-right-black.svg"
-                alt="Close"
-                width={7}
-                height={12}
-                className="h-3 w-3 md:h-6 md:w-6"
-              />
-            </IconButton>
-          )}
-          <DialogTitle sx={{ p: 0 }} component="h1">
-            <span className="text-sm font-medium leading-5 text-grey md:text-2xl">
-              {step === 1
-                ? "ثبت نهایی"
-                : step === 2
-                  ? "روش‌های پرداخت"
-                  : `step ${step}`}
-            </span>
-          </DialogTitle>
+          <div className="flex flex-row items-center gap-2">
+            {((fullScreen && step === 2 && innerStep === 2) ||
+              (step === 2 && !cart?.amount)) && (
+              <IconButton onClick={handleStepBack}>
+                <Image
+                  src="/icons/icon-chevron-right-black.svg"
+                  alt="Back"
+                  width={7}
+                  height={12}
+                  className="h-3 w-3 md:h-6 md:w-6"
+                />
+              </IconButton>
+            )}
+            <DialogTitle sx={{ p: 0 }} component="h1">
+              <span className="text-sm font-medium leading-5 text-grey md:text-2xl">
+                {step === 1
+                  ? "ثبت نهایی"
+                  : step === 2
+                    ? "روش‌های پرداخت"
+                    : `step ${step}`}
+              </span>
+            </DialogTitle>
+          </div>
           <IconButton onClick={() => handleCartClose()}>
             <Image
               src="/icons/icon-close.svg"
@@ -618,7 +635,7 @@ function CartPaymentMethods({
   };
 
   const handleSubmitPaymentMethod = () => {
-    if (step === 1) {
+    if (fullScreen && step === 1) {
       handleChangeStep(2);
       return;
     }
