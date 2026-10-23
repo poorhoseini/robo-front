@@ -1,6 +1,6 @@
 "use client";
 
-import React, { TouchEvent, useContext, useState } from "react";
+import React, { TouchEvent, useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/lib/providers/AuthProvider";
 import { TransitionProps } from "@mui/material/transitions";
 import {
@@ -60,6 +60,46 @@ export default function UpdateSimPriceModal({
   const [loading, setLoading] = useState(false);
   const [priceTypeRadioValue, setPriceTypeRadioValue] = useState<"0" | "1">();
   const [priceInputValue, setPriceInputValue] = useState<string>("");
+
+  const hasSingleItem = selectedItems.length === 1;
+  const currentItem = selectedItems[0] as SingleSimCard | SimPack | undefined;
+  const isNegotiable =
+    hasSingleItem && currentItem?.priceType === 1;
+
+  const currentPriceText = isNegotiable
+    ? "توافقی"
+    : hasSingleItem
+      ? currentItem?.price !== undefined && currentItem?.price !== null
+        ? `${persianNumber(currentItem.price)} تومان`
+        : "نامشخص"
+      : `${persianNumber(
+          selectedItems.reduce(
+            (acc, item) =>
+              acc + ((item as SingleSimCard | SimPack)?.price || 0),
+            0,
+          ),
+        )} تومان`;
+
+  useEffect(() => {
+    if (open && selectedItems.length > 0) {
+      const item = selectedItems[0] as SingleSimCard | SimPack;
+      if (item) {
+        if (item.priceType === 1) {
+          setPriceTypeRadioValue("1");
+          setPriceInputValue("");
+        } else if (item.price !== undefined && item.price !== null) {
+          setPriceTypeRadioValue("0");
+          setPriceInputValue(item.price === 0 ? "" : Number(item.price).toLocaleString("fa-ir"));
+        } else {
+          setPriceTypeRadioValue(undefined);
+          setPriceInputValue("");
+        }
+      }
+    } else if (!open) {
+      setPriceTypeRadioValue(undefined);
+      setPriceInputValue("");
+    }
+  }, [open, selectedItems]);
 
   async function handleSubmitPreDiscount() {
     if (!priceTypeRadioValue) return;
@@ -232,12 +272,26 @@ export default function UpdateSimPriceModal({
                 <p className="text-sm font-normal leading-5 text-grey md:text-base">{`${persianNumber(selectedItems.length)} عدد`}</p>
               </div>
               <HorizontalLine />
+              <div className="flex w-full flex-row items-center justify-between">
+                <p className="text-sm font-normal leading-5 text-grey md:text-base">
+                  {hasSingleItem ? "قیمت سیم کارت" : "مجموع قیمت سیم کارت‌ها"}
+                </p>
+                <p className="text-sm font-medium text-grey md:text-base">
+                  {currentPriceText}
+                </p>
+              </div>
+              <HorizontalLine />
               <p className="shrink-0 text-sm font-normal leading-5 text-grey md:text-base">
-                نوع قیمت گذاری:
+                تعیین قیمت جدید:
               </p>
               <PriceTypeSelector
                 value={priceTypeRadioValue}
-                onChange={(value) => setPriceTypeRadioValue(value)}
+                onChange={(value) => {
+                  setPriceTypeRadioValue(value);
+                  if (value === "0" && !priceInputValue && currentItem?.price && !isNegotiable) {
+                    setPriceInputValue(Number(currentItem.price).toLocaleString("fa-ir"));
+                  }
+                }}
               />
               {priceTypeRadioValue === "0" && (
                 <div className="flex w-full flex-col items-start gap-4 md:flex-row md:items-center md:justify-between">
@@ -370,7 +424,7 @@ function PriceTypeSelector({
             </span>
             <Radio
               checked={value === option.value}
-              value={"bale"}
+              value={option.value}
               sx={{ mr: "-9px" }}
             />
           </Button>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { TouchEvent, useContext, useState } from "react";
+import React, { TouchEvent, useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/lib/providers/AuthProvider";
 import { TransitionProps } from "@mui/material/transitions";
 import {
@@ -24,7 +24,8 @@ import {
 } from "@/lib/zustand/groupOperation";
 import { SingleSimCard } from "@/lib/entities/singleSimCard";
 import SavedItemCardClient from "@/components/forms/dashboard/SavedItemCardClient";
-import { persianNumber } from "@/lib/helpers/persianNumber.helper";
+import { englishNumber, persianNumber } from "@/lib/helpers/persianNumber.helper";
+import { numberInputRegex } from "@/lib/helpers/regex";
 import { Controller, useForm } from "react-hook-form";
 import {
   PreSetDiscountFormProps,
@@ -62,6 +63,8 @@ export default function DiscountModal({
   const {
     handleSubmit,
     control,
+    watch,
+    reset,
     formState: { errors },
   } = useForm<PreSetDiscountFormProps>({
     defaultValues: {
@@ -69,12 +72,49 @@ export default function DiscountModal({
     },
   });
 
+  const hasSingleItem = selectedItems.length === 1;
+  const currentItem = selectedItems[0] as SingleSimCard | SimPack | undefined;
+  const isNegotiable =
+    hasSingleItem && currentItem?.priceType === 1;
+
+  const currentPrice = hasSingleItem
+    ? currentItem?.price || 0
+    : selectedItems.reduce(
+        (acc, item) =>
+          acc + ((item as SingleSimCard | SimPack)?.price || 0),
+        0,
+      );
+
+  const currentPriceText = isNegotiable
+    ? "توافقی"
+    : currentPrice
+      ? `${persianNumber(currentPrice)} تومان`
+      : "نامشخص";
+
+  const watchOffPercent = watch("offPercent");
+  const offPercentNum = Number(englishNumber(watchOffPercent || ""));
+  const hasValidDiscount =
+    !isNegotiable &&
+    currentPrice > 0 &&
+    offPercentNum >= 1 &&
+    offPercentNum <= 49;
+
+  const discountedPrice = hasValidDiscount
+    ? Math.round(currentPrice * (1 - offPercentNum / 100))
+    : undefined;
+
+  useEffect(() => {
+    if (!open) {
+      reset({ offPercent: "" });
+    }
+  }, [open, reset]);
+
   async function handleSubmitPreDiscount(vals: PreSetDiscountFormProps) {
     setLoading(true);
 
     const payload: PreSetDiscountRequestProps = {
       refrence: serviceType,
-      offPercent: Number(vals.offPercent),
+      offPercent: Number(englishNumber(vals.offPercent)),
       refrenceIds: selectedItems.map((item) => item._id),
       socialReply: true,
     };
@@ -234,6 +274,15 @@ export default function DiscountModal({
                     <p className="text-sm font-normal leading-5 text-grey md:text-base">{`${persianNumber(selectedItems.length)} عدد`}</p>
                   </div>
                   <HorizontalLine />
+                  <div className="flex w-full flex-row items-center justify-between">
+                    <p className="text-sm font-normal leading-5 text-grey md:text-base">
+                      {hasSingleItem ? "قیمت سیم کارت" : "مجموع قیمت سیم کارت‌ها"}
+                    </p>
+                    <p className="text-sm font-medium text-grey md:text-base">
+                      {currentPriceText}
+                    </p>
+                  </div>
+                  <HorizontalLine />
                   <div className="item-start flex w-full flex-col justify-between gap-2 md:flex-row md:items-center">
                     <p className="shrink-0 text-sm font-normal leading-5 text-grey md:text-base">
                       درصد تخفیف را وارد کنید
@@ -250,7 +299,17 @@ export default function DiscountModal({
                             id="pre-number-select"
                             label="درصد تخفیف بین ۱ تا ۴۹"
                             value={value}
-                            onChange={onChange}
+                            onChange={(e) => {
+                              const val = e.target.value;
+                              const lastChar = val.slice(-1);
+                              if (val && !numberInputRegex.test(lastChar)) return;
+                              const engVal = Number(englishNumber(val));
+                              if (val && (isNaN(engVal) || engVal > 49)) return;
+                              onChange(val);
+                            }}
+                            onBlur={onBlur}
+                            inputRef={ref}
+                            inputProps={{ inputMode: "numeric" }}
                             sx={{
                               width: "100%",
                               height: "100%",
@@ -278,6 +337,19 @@ export default function DiscountModal({
                       />
                     </div>
                   </div>
+                  {discountedPrice !== undefined && (
+                    <>
+                      <HorizontalLine />
+                      <div className="flex w-full flex-row items-center justify-between">
+                        <p className="text-sm font-normal leading-5 text-grey md:text-base">
+                          {hasSingleItem ? "قیمت پس از تخفیف" : "مجموع قیمت پس از تخفیف"}
+                        </p>
+                        <p className="text-base font-bold text-primary md:text-lg">
+                          {`${persianNumber(discountedPrice)} تومان`}
+                        </p>
+                      </div>
+                    </>
+                  )}
                   <div className="hidden w-full md:flex">
                     <button
                       disabled={loading}
